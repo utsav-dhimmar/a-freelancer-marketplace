@@ -1,3 +1,4 @@
+import { APP_NAME } from "@app/shared";
 import express from "express";
 
 const app = express();
@@ -10,5 +11,6 @@ app.get("/", (req, res) => {
 
 const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => {
+  console.log(APP_NAME)
   console.log(`[SERVER] running on http://localhost:${PORT}`);
 });

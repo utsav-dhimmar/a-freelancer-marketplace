@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev:backend": "node --workspaces apps/backend run dev",
+    "dev:backend": "npm run dev --workspace=apps/backend",
+    "dev:frontend": "npm run start --workspace=apps/frontend",
     "build": "npm run build -ws"
   },
   "workspaces": [
