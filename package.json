@@ -1,0 +1,17 @@
+{
+  "name": "a-freelancer-marketplace-minor",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev:backend": "node --workspaces apps/backend run dev",
+    "build": "npm run build -ws"
+  },
+  "workspaces": [
+    "apps/*"
+  ],
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module"
+}
