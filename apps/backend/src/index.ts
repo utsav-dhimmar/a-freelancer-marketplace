@@ -1,16 +1,22 @@
+import app from "./app.js";
+import { connectDB } from "./db/index.js";
 import { APP_NAME } from "@app/shared";
-import express from "express";
-
-const app = express();
-
-app.get("/", (req, res) => {
-  return res.json({
-    message: "hi",
-  });
-});
 
 const PORT = process.env.PORT || 8000;
-app.listen(PORT, () => {
-  console.log(APP_NAME)
-  console.log(`[SERVER] running on http://localhost:${PORT}`);
-});
+
+const startServer = async () => {
+  try {
+    // Connect to MongoDB
+    await connectDB();
+
+    app.listen(PORT, () => {
+      console.log(APP_NAME);
+      console.log(`[SERVER] running on http://localhost:${PORT}`);
+    });
+  } catch (error) {
+    console.error("[SERVER] Failed to start:", error);
+    process.exit(1);
+  }
+};
+
+startServer();
