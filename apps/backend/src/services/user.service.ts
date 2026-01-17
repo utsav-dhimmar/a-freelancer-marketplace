@@ -8,6 +8,7 @@ export interface CreateUserData {
     fullname: string;
     email: string;
     password: string;
+    role?: "client" | "admin" | "freelancer";
 }
 
 export class UserService {

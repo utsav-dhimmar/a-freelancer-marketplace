@@ -1,4 +1,9 @@
 /**
+ * User roles
+ */
+export type UserRole = "client" | "admin" | "freelancer";
+
+/**
  * User types
  */
 export type IUser = {
@@ -6,6 +11,7 @@ export type IUser = {
     username: string;
     fullname: string;
     email: string;
+    role: UserRole;
     createdAt: Date;
     updatedAt: Date;
     password: string;
@@ -14,8 +20,9 @@ export type IUser = {
 /**
  * User registration request
  */
-export type RegisterUserRequest = Pick<IUser, "username" | "fullname" | "email" | "password">
-
+export type RegisterUserRequest = Pick<IUser, "username" | "fullname" | "email" | "password"> & {
+    role?: UserRole;
+}
 
 /**
  * User login request
@@ -23,10 +30,15 @@ export type RegisterUserRequest = Pick<IUser, "username" | "fullname" | "email" 
 export type LoginUserRequest = Pick<IUser, "email" | "password">
 
 /**
+ * User response (without password)
+ */
+export type UserResponse = Omit<IUser, "password">
+
+/**
  * Auth response with tokens
  */
 export type AuthResponse = {
-    user: IUser;
+    user: UserResponse;
     accessToken: string;
     refreshToken: string;
 }

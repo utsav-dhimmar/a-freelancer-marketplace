@@ -4,24 +4,28 @@ import type { AuthRequest } from "../middleware/auth.middleware.js";
 import { userService } from "../services/user.service.js";
 import asyncHandler from "../utils/asyncHandler.js";
 import {
-  generateAccessToken,
-  generateRefreshToken,
-  verifyRefreshToken,
+    generateAccessToken,
+    generateRefreshToken,
+    verifyRefreshToken,
 } from "../utils/jwt.util.js";
 
-
+/**
+ * POST /api/users/register
+ * Register a new user
+ */
 export const register = asyncHandler(async (req: Request, res: Response, _next: NextFunction) => {
-  /**
-   * --- Flow
-   * 1. get inputs
-   * 2. apply validation on it
-   * 3.
-   */
-    const { username, fullname, email, password } = req.body;
+    const { username, fullname, email, password, role } = req.body;
 
     // Validate required fields
     if (!username || !fullname || !email || !password) {
         throw new ApiError(HTTP_STATUS.BAD_REQUEST, "All fields are required (username, fullname, email, password)");
+    }
+
+    // Validate role if provided
+    const validRoles = ["client", "admin", "freelancer"];
+    const userRole = role || "client";
+    if (!validRoles.includes(userRole)) {
+        throw new ApiError(HTTP_STATUS.BAD_REQUEST, "Invalid role. Must be client, admin, or freelancer");
     }
 
     // Check if email already exists
@@ -34,12 +38,13 @@ export const register = asyncHandler(async (req: Request, res: Response, _next: 
         throw new ApiError(HTTP_STATUS.CONFLICT, "Username already taken");
     }
 
-    // Create user
+    // Create user with role
     const user = await userService.createUser({
         username,
         fullname,
         email,
         password,
+        role: userRole,
     });
 
     // Generate tokens
@@ -57,16 +62,19 @@ export const register = asyncHandler(async (req: Request, res: Response, _next: 
                 username: user.username,
                 fullname: user.fullname,
                 email: user.email,
+                role: user.role,
                 createdAt: user.createdAt,
-          },
-              // temp
+            },
             accessToken,
             refreshToken,
         })
     );
 });
 
-
+/**
+ * POST /api/users/login
+ * Authenticate user and return tokens
+ */
 export const login = asyncHandler(async (req: Request, res: Response, _next: NextFunction) => {
     const { email, password } = req.body;
 
@@ -95,28 +103,31 @@ export const login = asyncHandler(async (req: Request, res: Response, _next: Nex
     // Save refresh token
     await userService.updateRefreshToken(userId, refreshToken);
 
-  res.status(HTTP_STATUS.OK)
-    .cookie("accessToken", accessToken, {
-      expires: new Date(Date.now() + 900000)
-    })
-    .cookie("refreshToken", refreshToken)
-    .json(
-        new ApiResponse(HTTP_STATUS.OK, "Login successful", {
-            user: {
-                id: user._id,
-                username: user.username,
-                fullname: user.fullname,
-                email: user.email,
-                createdAt: user.createdAt,
-          },
-          // temp
-            accessToken,
-            refreshToken,
+    res.status(HTTP_STATUS.OK)
+        .cookie("accessToken", accessToken, {
+            expires: new Date(Date.now() + 900000),
         })
-    );
+        .cookie("refreshToken", refreshToken)
+        .json(
+            new ApiResponse(HTTP_STATUS.OK, "Login successful", {
+                user: {
+                    id: user._id,
+                    username: user.username,
+                    fullname: user.fullname,
+                    email: user.email,
+                    role: user.role,
+                    createdAt: user.createdAt,
+                },
+                accessToken,
+                refreshToken,
+            })
+        );
 });
 
-
+/**
+ * GET /api/users/me
+ * Get current authenticated user info
+ */
 export const me = asyncHandler(async (req: AuthRequest, res: Response, _next: NextFunction) => {
     if (!req.user) {
         throw new ApiError(HTTP_STATUS.UNAUTHORIZED, "User not authenticated");
@@ -129,6 +140,7 @@ export const me = asyncHandler(async (req: AuthRequest, res: Response, _next: Ne
                 username: req.user.username,
                 fullname: req.user.fullname,
                 email: req.user.email,
+                role: req.user.role,
                 createdAt: req.user.createdAt,
                 updatedAt: req.user.updatedAt,
             },
@@ -136,7 +148,10 @@ export const me = asyncHandler(async (req: AuthRequest, res: Response, _next: Ne
     );
 });
 
-
+/**
+ * POST /api/users/logout
+ * Clear refresh token and logout user
+ */
 export const logout = asyncHandler(async (req: AuthRequest, res: Response, _next: NextFunction) => {
     if (!req.user) {
         throw new ApiError(HTTP_STATUS.UNAUTHORIZED, "User not authenticated");
@@ -145,14 +160,16 @@ export const logout = asyncHandler(async (req: AuthRequest, res: Response, _next
     const userId = String(req.user._id);
     await userService.updateRefreshToken(userId, null);
 
-  res
-    .status(HTTP_STATUS.OK)
-    .clearCookie("refreshToken")
-    .clearCookie("accessToken")
-    .json(new ApiResponse(HTTP_STATUS.OK, "Logout successful", null));
+    res.status(HTTP_STATUS.OK)
+        .clearCookie("refreshToken")
+        .clearCookie("accessToken")
+        .json(new ApiResponse(HTTP_STATUS.OK, "Logout successful", null));
 });
 
-
+/**
+ * POST /api/users/refresh-token
+ * Generate new access token using refresh token
+ */
 export const refreshTokenHandler = asyncHandler(async (req: Request, res: Response, _next: NextFunction) => {
     const { refreshToken } = req.body;
 
@@ -176,14 +193,14 @@ export const refreshTokenHandler = asyncHandler(async (req: Request, res: Respon
     const userId = String(user._id);
     const newAccessToken = generateAccessToken(userId);
 
-  res.status(HTTP_STATUS.OK)
-    .cookie("accessToken", newAccessToken,{
-      expires: new Date(Date.now() + 900000)
-    })
-    .cookie("refreshToken", refreshToken)
-    .json(
-        new ApiResponse(HTTP_STATUS.OK, "Token refreshed successfully", {
-            accessToken: newAccessToken,
+    res.status(HTTP_STATUS.OK)
+        .cookie("accessToken", newAccessToken, {
+            expires: new Date(Date.now() + 900000),
         })
-    );
+        .cookie("refreshToken", refreshToken)
+        .json(
+            new ApiResponse(HTTP_STATUS.OK, "Token refreshed successfully", {
+                accessToken: newAccessToken,
+            })
+        );
 });

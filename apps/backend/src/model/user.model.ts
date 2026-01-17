@@ -12,6 +12,7 @@ export interface IUser extends Document {
     refreshToken?: string;
     createdAt: Date;
     updatedAt: Date;
+    role: "client" | "admin" | "freelancer";
     comparePassword(candidatePassword: string): Promise<boolean>;
 }
 
@@ -27,12 +28,14 @@ const userSchema = new Schema<IUser>(
             trim: true,
             minlength: [3, "Username must be at least 3 characters"],
             maxlength: [30, "Username cannot exceed 30 characters"],
+            index: true,
         },
         fullname: {
             type: String,
             required: [true, "Full name is required"],
             trim: true,
             maxlength: [100, "Full name cannot exceed 100 characters"],
+            index: true,
         },
         email: {
             type: String,
@@ -41,6 +44,7 @@ const userSchema = new Schema<IUser>(
             trim: true,
             lowercase: true,
             // match: [/^\S+@\S+\.\S+$/, "Please enter a valid email"],
+            index: true,
         },
         password: {
             type: String,
@@ -50,6 +54,11 @@ const userSchema = new Schema<IUser>(
         refreshToken: {
             type: String,
             default: null,
+        },
+        role: {
+            type: String,
+            enum: ["client", "admin", "freelancer"],
+            default: "client",
         },
     },
     {
