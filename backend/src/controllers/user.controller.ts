@@ -5,9 +5,9 @@ import { userService } from "../services/user.service.js";
 import { ApiError, ApiResponse } from "../utils/ApiHelper.js";
 import asyncHandler from "../utils/asyncHandler.js";
 import {
-    generateAccessToken,
-    generateRefreshToken,
-    verifyRefreshToken,
+	generateAccessToken,
+	generateRefreshToken,
+	verifyRefreshToken,
 } from "../utils/jwt.util.js";
 
 /**
@@ -172,6 +172,7 @@ export const me = asyncHandler(
 					fullname: req.user.fullname,
 					email: req.user.email,
 					role: req.user.role,
+					profilePicture: req.user.profilePicture,
 					createdAt: req.user.createdAt,
 					updatedAt: req.user.updatedAt,
 				},
@@ -254,5 +255,56 @@ export const refreshTokenHandler = asyncHandler(
 					},
 				),
 			);
+	},
+);
+
+/**
+ * POST /api/users/profile-picture
+ * Upload profile picture for authenticated user
+ */
+export const updateProfilePicture = asyncHandler(
+	async (req: AuthRequest, res: Response, _next: NextFunction) => {
+		if (!req.user) {
+			throw new ApiError(
+				HTTP_STATUS.UNAUTHORIZED,
+				"User not authenticated",
+			);
+		}
+
+		if (!req.file) {
+			throw new ApiError(
+				HTTP_STATUS.BAD_REQUEST,
+				"Profile picture file is required",
+			);
+		}
+
+		// Build the profile picture URL path
+		const profilePicturePath = `/profiles/${req.file.filename}`;
+
+		// Update user's profile picture in database
+		const userId = String(req.user._id);
+		const updatedUser = await userService.updateProfilePicture(userId, profilePicturePath);
+
+		if (!updatedUser) {
+			throw new ApiError(
+				HTTP_STATUS.NOT_FOUND,
+				"User not found",
+			);
+		}
+
+		res.status(HTTP_STATUS.OK).json(
+			new ApiResponse(HTTP_STATUS.OK, "Profile picture updated successfully", {
+				user: {
+					id: updatedUser._id,
+					username: updatedUser.username,
+					fullname: updatedUser.fullname,
+					email: updatedUser.email,
+					role: updatedUser.role,
+					profilePicture: updatedUser.profilePicture,
+					createdAt: updatedUser.createdAt,
+					updatedAt: updatedUser.updatedAt,
+				},
+			}),
+		);
 	},
 );

@@ -78,6 +78,17 @@ export class UserService {
         const user = await User.findOne({ username });
         return user !== null;
     }
+
+    /**
+     * Update user's profile picture
+     */
+    async updateProfilePicture(userId: string, profilePicture: string): Promise<IUser | null> {
+        return User.findByIdAndUpdate(
+            userId,
+            { profilePicture },
+            { new: true }
+        ).select("-password -refreshToken");
+    }
 }
 
 export const userService = new UserService();
