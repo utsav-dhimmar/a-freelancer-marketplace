@@ -1,8 +1,10 @@
-import express from 'express';
 import cors from 'cors';
+import express from 'express';
 
-import userRoutes from './routes/user.routes.js';
+import { HTTP_STATUS } from './constants/index.js';
 import freelancerRoutes from './routes/freelancer.routes.js';
+import userRoutes from './routes/user.routes.js';
+import { ApiError } from './utils/ApiHelper.js';
 
 const app = express();
 
@@ -24,5 +26,11 @@ app.get('/', (req, res) => {
 // API Routes
 app.use('/api/users', userRoutes);
 app.use('/api/freelancers', freelancerRoutes);
+
+app.all('*', (req, res) => {
+  return res
+    .status(HTTP_STATUS.BAD_REQUEST)
+    .json(new ApiError(HTTP_STATUS.BAD_REQUEST, `${req.path} is not found`));
+});
 
 export default app;
