@@ -1,19 +1,26 @@
-import { Router } from "express";
-import { login, logout, me, refreshTokenHandler, register, updateProfilePicture } from "../controllers/user.controller.js";
-import { authMiddleware } from "../middleware/auth.middleware.js";
-import { uploadProfilePicture } from "../utils/multer.config.js";
+import { Router } from 'express';
+import {
+  login,
+  logout,
+  me,
+  refreshTokenHandler,
+  register,
+  updateProfilePicture,
+} from '../controllers/user.controller.js';
+import { authMiddleware } from '../middleware/auth.middleware.js';
+import { uploadProfilePicture } from '../utils/multer.config.js';
 
 const router = Router();
 
-router.post("/register", register);
+router.post('/register', register);
 
-router.post("/login", login);
+router.post('/login', login);
 
-router.get("/me", authMiddleware, me);
+router.get('/me', authMiddleware, me);
 
-router.post("/logout", authMiddleware, logout);
+router.post('/logout', authMiddleware, logout);
 
-router.post("/refresh-token", refreshTokenHandler);
+router.post('/refresh-token', refreshTokenHandler);
 
 /**
  * @route   POST /api/users/profile-picture
@@ -21,10 +28,10 @@ router.post("/refresh-token", refreshTokenHandler);
  * @access  Private
  */
 router.post(
-    "/profile-picture",
-    authMiddleware,
-    uploadProfilePicture.single("profilePicture"),
-    updateProfilePicture
+  '/profile-picture',
+  authMiddleware,
+  uploadProfilePicture.single('profilePicture'),
+  updateProfilePicture,
 );
 
 export default router;

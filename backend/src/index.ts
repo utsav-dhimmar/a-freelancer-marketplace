@@ -1,5 +1,5 @@
-import app from "./app.js";
-import { connectDB } from "./db/index.js";
+import app from './app.js';
+import { connectDB } from './db/index.js';
 
 const PORT = process.env.PORT || 8000;
 
@@ -12,7 +12,7 @@ const startServer = async () => {
       console.log(`[SERVER] running on http://localhost:${PORT}`);
     });
   } catch (error) {
-    console.error("[SERVER] Failed to start:", error);
+    console.error('[SERVER] Failed to start:', error);
     process.exit(1);
   }
 };
