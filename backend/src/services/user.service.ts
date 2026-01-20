@@ -9,6 +9,7 @@ export interface CreateUserData {
   email: string;
   password: string;
   role?: 'client' | 'admin' | 'freelancer';
+  profilePicture: string;
 }
 
 export class UserService {

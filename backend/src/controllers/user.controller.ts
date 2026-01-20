@@ -12,7 +12,7 @@ import {
 
 /**
  * POST /api/users/register
- * Register a new user
+ * Register a new user with optional profile picture
  */
 export const register = asyncHandler(
   async (req: Request, res: Response, _next: NextFunction) => {
@@ -46,13 +46,25 @@ export const register = asyncHandler(
       throw new ApiError(HTTP_STATUS.CONFLICT, 'Username already taken');
     }
 
-    // Create user with role
+    // Validate profile picture is provided
+    if (!req.file) {
+      throw new ApiError(
+        HTTP_STATUS.BAD_REQUEST,
+        'Profile picture is required',
+      );
+    }
+
+    // Build profile picture path
+    const profilePicture = `/profiles/${req.file.filename}`;
+
+    // Create user with role and profile picture
     const user = await userService.createUser({
       username,
       fullname,
       email,
       password,
       role: userRole,
+      profilePicture,
     });
 
     // Generate tokens
@@ -71,6 +83,7 @@ export const register = asyncHandler(
           fullname: user.fullname,
           email: user.email,
           role: user.role,
+          profilePicture: user.profilePicture,
           createdAt: user.createdAt,
         },
         accessToken,

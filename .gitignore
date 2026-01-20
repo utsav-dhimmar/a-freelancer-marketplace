@@ -1,2 +1,4 @@
 node_modules/
 CONTRIBUTING.md
+.env
+routes.md

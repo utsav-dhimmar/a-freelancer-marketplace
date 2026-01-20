@@ -12,7 +12,11 @@ import { uploadProfilePicture } from '../utils/multer.config.js';
 
 const router = Router();
 
-router.post('/register', register);
+router.post(
+  '/register',
+  uploadProfilePicture.single('profilePicture'),
+  register,
+);
 
 router.post('/login', login);
 
