@@ -29,7 +29,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/freelancers', freelancerRoutes);
 app.use('/api/jobs', jobRoutes);
 
-app.all('*', (req, res) => {
+app.use((req, res) => {
   return res
     .status(HTTP_STATUS.BAD_REQUEST)
     .json(new ApiError(HTTP_STATUS.BAD_REQUEST, `${req.path} is not found`));
