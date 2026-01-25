@@ -6,6 +6,7 @@ import freelancerRoutes from './routes/freelancer.routes.js';
 import userRoutes from './routes/user.routes.js';
 import { ApiError } from './utils/ApiHelper.js';
 import jobRoutes from './routes/job.routes.js';
+import proposalRoutes from './routes/proposals.routes.js';
 
 const app = express();
 
@@ -28,6 +29,7 @@ app.get('/', (req, res) => {
 app.use('/api/users', userRoutes);
 app.use('/api/freelancers', freelancerRoutes);
 app.use('/api/jobs', jobRoutes);
+app.use('/api/proposals', proposalRoutes);
 
 app.use((req, res) => {
   return res
