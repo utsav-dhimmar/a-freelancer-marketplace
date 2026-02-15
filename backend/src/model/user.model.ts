@@ -67,6 +67,7 @@ const userSchema = new Schema<IUser>(
       type: String,
       default: null,
       unique: true,
+      index: true,
     },
     clientRating: {
       type: Number,
