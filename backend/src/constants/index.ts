@@ -55,3 +55,16 @@ export const API_ENDPOINTS = {
     DISPUTE: (id: string) => `/api/contracts/${id}/dispute`,
   },
 } as const;
+
+export const TOKEN = {
+  /**
+   * HOURS * MINUTES * SECONDS * MILLISECONDS
+   * 1 day
+   */
+  ACCESSTOKEN_MAX_AGE: 24 * 60 * 60 * 1000,
+  /**
+   * DAYS * HOURS * MINUTES * SECONDS * MILLISECONDS
+   * 10 days
+   */
+  REFRESHTOKEN_MAX_AGE: 10 * 24 * 60 * 60 * 1000,
+} as const;
