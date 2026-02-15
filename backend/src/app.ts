@@ -3,10 +3,10 @@ import express from 'express';
 
 import { HTTP_STATUS } from './constants/index.js';
 import freelancerRoutes from './routes/freelancer.routes.js';
-import userRoutes from './routes/user.routes.js';
-import { ApiError } from './utils/ApiHelper.js';
 import jobRoutes from './routes/job.routes.js';
 import proposalRoutes from './routes/proposals.routes.js';
+import userRoutes from './routes/user.routes.js';
+import { ApiError } from './utils/ApiHelper.js';
 
 const app = express();
 
@@ -17,6 +17,12 @@ app.use(express.urlencoded({ extended: true }));
 
 // Serve static files from public folder
 app.use(express.static('public'));
+app.use((req, res, next) => {
+  console.log(
+    `[URL]: ${req.url} [METHOD]: ${req.method} [STATUS]: ${res.statusCode}`,
+  );
+  next();
+});
 
 // Routes
 app.get('/', (req, res) => {
