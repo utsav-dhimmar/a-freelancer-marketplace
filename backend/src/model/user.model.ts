@@ -66,6 +66,8 @@ const userSchema = new Schema<IUser>(
     profilePicture: {
       type: String,
       default: null,
+      unique: true,
+      index: true,
     },
     clientRating: {
       type: Number,

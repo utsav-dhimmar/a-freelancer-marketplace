@@ -1,9 +1,10 @@
 import type { NextFunction, Request, Response } from 'express';
-import { HTTP_STATUS } from '../constants/index.js';
+import { HTTP_STATUS, TOKEN } from '../constants/index.js';
 import type { AuthRequest } from '../middleware/auth.middleware.js';
 import { userService } from '../services/user.service.js';
 import { ApiError, ApiResponse } from '../utils/ApiHelper.js';
 import asyncHandler from '../utils/asyncHandler.js';
+
 import {
   generateAccessToken,
   generateRefreshToken,
@@ -112,13 +113,19 @@ export const login = asyncHandler(
     // Find user by email
     const user = await userService.findByEmail(email);
     if (!user) {
-      throw new ApiError(HTTP_STATUS.UNAUTHORIZED, 'Invalid email or password');
+      throw new ApiError(
+        HTTP_STATUS.UNAUTHORIZED,
+        'User with this email not found',
+      );
     }
 
     // Verify password
     const isPasswordValid = await user.comparePassword(password);
     if (!isPasswordValid) {
-      throw new ApiError(HTTP_STATUS.UNAUTHORIZED, 'Invalid email or password');
+      throw new ApiError(
+        HTTP_STATUS.UNAUTHORIZED,
+        'The password you entered is incorrect. Please try again',
+      );
     }
 
     // Generate tokens
@@ -132,9 +139,11 @@ export const login = asyncHandler(
     res
       .status(HTTP_STATUS.OK)
       .cookie('accessToken', accessToken, {
-        expires: new Date(Date.now() + 900000),
+        maxAge: TOKEN.ACCESSTOKEN_MAX_AGE,
       })
-      .cookie('refreshToken', refreshToken)
+      .cookie('refreshToken', refreshToken, {
+        maxAge: TOKEN.REFRESHTOKEN_MAX_AGE,
+      })
       .json(
         new ApiResponse(HTTP_STATUS.OK, 'Login successful', {
           user: {
@@ -144,6 +153,7 @@ export const login = asyncHandler(
             email: user.email,
             role: user.role,
             createdAt: user.createdAt,
+            profilePicture: user?.profilePicture,
           },
           accessToken,
           refreshToken,
@@ -234,9 +244,11 @@ export const refreshTokenHandler = asyncHandler(
     res
       .status(HTTP_STATUS.OK)
       .cookie('accessToken', newAccessToken, {
-        expires: new Date(Date.now() + 900000),
+        maxAge: TOKEN.ACCESSTOKEN_MAX_AGE,
       })
-      .cookie('refreshToken', refreshToken)
+      .cookie('refreshToken', refreshToken, {
+        maxAge: TOKEN.REFRESHTOKEN_MAX_AGE,
+      })
       .json(
         new ApiResponse(HTTP_STATUS.OK, 'Token refreshed successfully', {
           accessToken: newAccessToken,

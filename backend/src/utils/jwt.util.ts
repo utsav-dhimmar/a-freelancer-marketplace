@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-
+import { TOKEN } from '../constants/index.js';
 export interface JwtPayload {
   userId: string;
   iat?: number;
@@ -12,7 +12,9 @@ export const generateAccessToken = (userId: string): string => {
     throw new Error('JWT_SECRET environment variable is not defined');
   }
 
-  return jwt.sign({ userId }, secret, { expiresIn: '15m' });
+  return jwt.sign({ userId }, secret, {
+    expiresIn: TOKEN.ACCESSTOKEN_MAX_AGE / 1000,
+  });
 };
 
 export const generateRefreshToken = (userId: string): string => {
@@ -21,7 +23,9 @@ export const generateRefreshToken = (userId: string): string => {
     throw new Error('JWT_REFRESH_SECRET environment variable is not defined');
   }
 
-  return jwt.sign({ userId }, refreshSecret, { expiresIn: '7d' });
+  return jwt.sign({ userId }, refreshSecret, {
+    expiresIn: TOKEN.REFRESHTOKEN_MAX_AGE / 1000,
+  });
 };
 
 export const verifyAccessToken = (token: string): JwtPayload | null => {
