@@ -1,11 +1,11 @@
 import type { NextFunction, Response } from 'express';
+import type { ObjectId } from 'mongoose';
 import { HTTP_STATUS } from '../constants/index.js';
 import type { AuthRequest } from '../middleware/auth.middleware.js';
-import { proposalService } from '../services/proposals.service.js';
 import { jobService } from '../services/job.service.js';
+import { proposalService } from '../services/proposals.service.js';
 import { ApiError, ApiResponse } from '../utils/ApiHelper.js';
 import asyncHandler from '../utils/asyncHandler.js';
-import type { ObjectId } from 'mongoose';
 
 /**
  * GET /api/proposals/job/:jobid
@@ -36,7 +36,9 @@ export const getProposalsByJobId = asyncHandler(
       page,
       limit,
     );
-
+    if (!result.proposals || result.proposals.length) {
+      throw new ApiError(HTTP_STATUS.NOT_FOUND, 'Proposals not found');
+    }
     res
       .status(HTTP_STATUS.OK)
       .json(new ApiResponse(HTTP_STATUS.OK, 'Proposals retrieved', result));
@@ -106,7 +108,9 @@ export const getFreelancerProposals = asyncHandler(
       page,
       limit,
     );
-
+    if (!result.proposals || result.proposals.length) {
+      throw new ApiError(HTTP_STATUS.NOT_FOUND, 'Proposals not found');
+    }
     res
       .status(HTTP_STATUS.OK)
       .json(
@@ -226,13 +230,11 @@ export const updateProposal = asyncHandler(
       estimatedTime,
     });
 
-    res
-      .status(HTTP_STATUS.OK)
-      .json(
-        new ApiResponse(HTTP_STATUS.OK, 'Proposal updated successfully', {
-          proposal,
-        }),
-      );
+    res.status(HTTP_STATUS.OK).json(
+      new ApiResponse(HTTP_STATUS.OK, 'Proposal updated successfully', {
+        proposal,
+      }),
+    );
   },
 );
 
