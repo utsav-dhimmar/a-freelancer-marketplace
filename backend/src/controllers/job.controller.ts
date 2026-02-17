@@ -74,13 +74,11 @@ export const createJob = asyncHandler(
       skillsRequired,
     });
 
-    res
-      .status(HTTP_STATUS.CREATED)
-      .json(
-        new ApiResponse(HTTP_STATUS.CREATED, 'Job created successfully', {
-          job,
-        }),
-      );
+    res.status(HTTP_STATUS.CREATED).json(
+      new ApiResponse(HTTP_STATUS.CREATED, 'Job created successfully', {
+        job,
+      }),
+    );
   },
 );
 
@@ -95,7 +93,9 @@ export const getAllJobs = asyncHandler(
     const status = (req.query.status as string) || 'open';
 
     const result = await jobService.getAllJobs(page, limit, status);
-
+    if (!result.jobs || result.jobs.length) {
+      throw new ApiError(HTTP_STATUS.NOT_FOUND, 'Jobs not found');
+    }
     res
       .status(HTTP_STATUS.OK)
       .json(new ApiResponse(HTTP_STATUS.OK, 'Jobs retrieved', result));
@@ -131,7 +131,9 @@ export const searchJobs = asyncHandler(
     };
 
     const result = await jobService.searchJobs(filters, page, limit);
-
+    if (!result.jobs || result.jobs.length) {
+      throw new ApiError(HTTP_STATUS.NOT_FOUND, 'Jobs not found');
+    }
     res
       .status(HTTP_STATUS.OK)
       .json(new ApiResponse(HTTP_STATUS.OK, 'Search results', result));
@@ -163,7 +165,9 @@ export const getMyJobs = asyncHandler(
       page,
       limit,
     );
-
+    if (!result.jobs || result.jobs.length) {
+      throw new ApiError(HTTP_STATUS.NOT_FOUND, 'Jobs not found');
+    }
     res
       .status(HTTP_STATUS.OK)
       .json(new ApiResponse(HTTP_STATUS.OK, 'Your jobs retrieved', result));
@@ -281,13 +285,11 @@ export const updateJobStatus = asyncHandler(
       throw new ApiError(HTTP_STATUS.NOT_FOUND, 'Job not found');
     }
 
-    res
-      .status(HTTP_STATUS.OK)
-      .json(
-        new ApiResponse(HTTP_STATUS.OK, 'Job status updated successfully', {
-          job,
-        }),
-      );
+    res.status(HTTP_STATUS.OK).json(
+      new ApiResponse(HTTP_STATUS.OK, 'Job status updated successfully', {
+        job,
+      }),
+    );
   },
 );
 
