@@ -2,9 +2,9 @@ import type { NextFunction, Response } from 'express';
 import { HTTP_STATUS } from '../constants/index.js';
 import type { AuthRequest } from '../middleware/auth.middleware.js';
 import { contractService } from '../services/contracts.service.js';
-import { proposalService } from '../services/proposals.service.js';
-import { jobService } from '../services/job.service.js';
 import { freelancerService } from '../services/freelancer.service.js';
+import { jobService } from '../services/job.service.js';
+import { proposalService } from '../services/proposals.service.js';
 import { ApiError, ApiResponse } from '../utils/ApiHelper.js';
 import asyncHandler from '../utils/asyncHandler.js';
 
@@ -26,7 +26,9 @@ export const getContracts = asyncHandler(
       page,
       limit,
     );
-
+    if (!result.contracts || result.contracts.length) {
+      throw new ApiError(HTTP_STATUS.NOT_FOUND, 'Contracts not found');
+    }
     res
       .status(HTTP_STATUS.OK)
       .json(new ApiResponse(HTTP_STATUS.OK, 'Contracts retrieved', result));
@@ -180,13 +182,11 @@ export const updateContractStatus = asyncHandler(
       throw new ApiError(HTTP_STATUS.NOT_FOUND, 'Contract not found');
     }
 
-    res
-      .status(HTTP_STATUS.OK)
-      .json(
-        new ApiResponse(HTTP_STATUS.OK, 'Contract status updated', {
-          contract,
-        }),
-      );
+    res.status(HTTP_STATUS.OK).json(
+      new ApiResponse(HTTP_STATUS.OK, 'Contract status updated', {
+        contract,
+      }),
+    );
   },
 );
 
@@ -231,13 +231,11 @@ export const submitWork = asyncHandler(
       'submitted',
     );
 
-    res
-      .status(HTTP_STATUS.OK)
-      .json(
-        new ApiResponse(HTTP_STATUS.OK, 'Work submitted successfully', {
-          contract,
-        }),
-      );
+    res.status(HTTP_STATUS.OK).json(
+      new ApiResponse(HTTP_STATUS.OK, 'Work submitted successfully', {
+        contract,
+      }),
+    );
   },
 );
 
@@ -290,13 +288,11 @@ export const completeContract = asyncHandler(
       await freelancerService.incrementTotalJobs(String(contract.freelancer));
     }
 
-    res
-      .status(HTTP_STATUS.OK)
-      .json(
-        new ApiResponse(HTTP_STATUS.OK, 'Contract completed successfully', {
-          contract,
-        }),
-      );
+    res.status(HTTP_STATUS.OK).json(
+      new ApiResponse(HTTP_STATUS.OK, 'Contract completed successfully', {
+        contract,
+      }),
+    );
   },
 );
 
@@ -338,12 +334,10 @@ export const raiseDispute = asyncHandler(
 
     const contract = await contractService.updateContractStatus(id, 'disputed');
 
-    res
-      .status(HTTP_STATUS.OK)
-      .json(
-        new ApiResponse(HTTP_STATUS.OK, 'Dispute raised successfully', {
-          contract,
-        }),
-      );
+    res.status(HTTP_STATUS.OK).json(
+      new ApiResponse(HTTP_STATUS.OK, 'Dispute raised successfully', {
+        contract,
+      }),
+    );
   },
 );
