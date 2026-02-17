@@ -93,7 +93,7 @@ export const getAllJobs = asyncHandler(
     const status = (req.query.status as string) || 'open';
 
     const result = await jobService.getAllJobs(page, limit, status);
-    if (!result.jobs || result.jobs.length) {
+    if (!result.jobs || result.jobs.length == 0) {
       throw new ApiError(HTTP_STATUS.NOT_FOUND, 'Jobs not found');
     }
     res
@@ -131,7 +131,7 @@ export const searchJobs = asyncHandler(
     };
 
     const result = await jobService.searchJobs(filters, page, limit);
-    if (!result.jobs || result.jobs.length) {
+    if (!result.jobs || result.jobs.length == 0) {
       throw new ApiError(HTTP_STATUS.NOT_FOUND, 'Jobs not found');
     }
     res
@@ -165,7 +165,7 @@ export const getMyJobs = asyncHandler(
       page,
       limit,
     );
-    if (!result.jobs || result.jobs.length) {
+    if (!result.jobs || result.jobs.length == 0) {
       throw new ApiError(HTTP_STATUS.NOT_FOUND, 'Jobs not found');
     }
     res
