@@ -282,10 +282,13 @@ export const completeContract = asyncHandler(
 
     // Update job status to completed
     if (contract) {
-      await jobService.updateJobStatus(String(contract.job), 'completed');
+      const jobId = (contract.job as any)._id || contract.job;
+      await jobService.updateJobStatus(String(jobId), 'completed');
 
       // Increment freelancer's total jobs
-      await freelancerService.incrementTotalJobs(String(contract.freelancer));
+      const freelancerId =
+        (contract.freelancer as any)._id || contract.freelancer;
+      await freelancerService.incrementTotalJobs(String(freelancerId));
     }
 
     res.status(HTTP_STATUS.OK).json(
