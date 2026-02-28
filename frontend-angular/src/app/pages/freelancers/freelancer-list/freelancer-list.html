@@ -1,0 +1,108 @@
+<div class="container py-4">
+  <div class="page-header">
+    <h1 class="page-title">Talent Directory</h1>
+    <p class="page-subtitle">Discover skilled professionals for your projects</p>
+  </div>
+
+  <div class="filter-bar">
+    <div class="row g-3 align-items-end">
+      <div class="col-md-4">
+        <label class="form-label">Search by Skills</label>
+        <div class="input-group">
+          <span class="input-group-text bg-transparent border-end-0">
+            <i class="bi bi-search text-muted"></i>
+          </span>
+          <input
+            type="text"
+            class="form-control border-start-0"
+            placeholder="e.g. React, Python, Design..."
+            [(ngModel)]="skills"
+            (input)="search()"
+          />
+        </div>
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">Min Hourly Rate</label>
+        <div class="input-group">
+          <span class="input-group-text bg-transparent border-end-0">
+            <i class="bi bi-currency-dollar text-muted"></i>
+          </span>
+          <input
+            type="number"
+            class="form-control border-start-0"
+            placeholder="0"
+            [(ngModel)]="minRate"
+            (input)="search()"
+          />
+        </div>
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">Max Hourly Rate</label>
+        <div class="input-group">
+          <span class="input-group-text bg-transparent border-end-0">
+            <i class="bi bi-currency-dollar text-muted"></i>
+          </span>
+          <input
+            type="number"
+            class="form-control border-start-0"
+            placeholder="Any"
+            [(ngModel)]="maxRate"
+            (input)="search()"
+          />
+        </div>
+      </div>
+      <div class="col-md-2">
+        <button class="btn btn-outline-secondary w-100" (click)="clearFilters()">
+          <i class="bi bi-x-circle me-1"></i>Clear
+        </button>
+      </div>
+    </div>
+  </div>
+
+  @if (loading()) {
+    <div class="text-center py-5">
+      <div class="spinner-border" role="status"></div>
+    </div>
+  } @else if (freelancers().length === 0) {
+    <div class="alert alert-info">
+      <i class="bi bi-info-circle me-2"></i>No freelancers found matching your criteria
+    </div>
+  } @else {
+    <div class="row g-4">
+      @for (freelancer of freelancers(); track freelancer._id; let i = $index) {
+        <div class="col-md-4 fade-in" [class]="'stagger-' + ((i % 5) + 1)">
+          <div class="freelancer-card">
+            <img
+              [src]="getFreelancerProfilePicture(freelancer)"
+              class="freelancer-avatar"
+              [alt]="getFreelancerName(freelancer)"
+            />
+            <h5 class="freelancer-name">{{ getFreelancerName(freelancer) }}</h5>
+            <p class="freelancer-title">{{ freelancer.title }}</p>
+            <p class="text-muted small mb-3">
+              {{ freelancer.bio | slice: 0 : 100
+              }}{{ freelancer.bio && freelancer.bio.length > 100 ? '...' : '' }}
+            </p>
+            <div class="freelancer-rate">\${{ freelancer.hourlyRate }}<span>/hr</span></div>
+            <div class="mb-3">
+              @for (skill of freelancer.skills.slice(0, 4); track skill) {
+                <span class="skill-tag">{{ skill }}</span>
+              }
+              @if (freelancer.skills.length > 4) {
+                <span class="skill-tag">+{{ freelancer.skills.length - 4 }}</span>
+              }
+            </div>
+            <div class="mt-auto pt-3 border-top">
+              <a
+                [routerLink]="['/freelancers', freelancer._id]"
+                class="btn btn-outline-primary w-100"
+              >
+                View Profile <i class="bi bi-arrow-right ms-1"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  }
+</div>

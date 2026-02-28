@@ -1,0 +1,67 @@
+<div class="container py-4">
+  <div class="page-header">
+    <h1 class="page-title">My Contracts</h1>
+    <p class="page-subtitle">Manage your active and past contracts</p>
+  </div>
+
+  @if (loading()) {
+    <div class="text-center py-5">
+      <div class="spinner-border" role="status"></div>
+    </div>
+  } @else if (contracts().length === 0) {
+    <div class="empty-state">
+      <div class="empty-icon">
+        <i class="bi bi-file-earmark-text"></i>
+      </div>
+      <h3>No Contracts Yet</h3>
+      <p>
+        You don't have any contracts at the moment. Start by posting a job or submitting a proposal.
+      </p>
+      <a routerLink="/jobs" class="btn btn-primary">
+        <i class="bi bi-briefcase me-2"></i>Browse Jobs
+      </a>
+    </div>
+  } @else {
+    <div class="card">
+      <div class="table-responsive">
+        <table class="table table-hover mb-0">
+          <thead>
+            <tr>
+              <th>Job</th>
+              <th>Client</th>
+              <th>Freelancer</th>
+              <th>Amount</th>
+              <th>Status</th>
+              <th>Start Date</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (contract of contracts(); track contract._id) {
+              <tr>
+                <td class="fw-semibold">{{ getJobTitle(contract) }}</td>
+                <td>{{ getClientName(contract) }}</td>
+                <td>{{ getFreelancerName(contract) }}</td>
+                <td class="fw-semibold text-success">${{ contract.amount }}</td>
+                <td>
+                  <span class="badge" [class]="getStatusClass(contract.status)">
+                    {{ contract.status }}
+                  </span>
+                </td>
+                <td class="text-muted">{{ contract.startDate | date: 'mediumDate' }}</td>
+                <td>
+                  <a
+                    [routerLink]="['/contracts', contract._id]"
+                    class="btn btn-sm btn-outline-primary"
+                  >
+                    <i class="bi bi-eye me-1"></i>View
+                  </a>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  }
+</div>

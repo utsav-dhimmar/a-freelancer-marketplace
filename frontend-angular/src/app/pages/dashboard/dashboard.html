@@ -1,0 +1,84 @@
+<div class="container py-4">
+  <div class="page-header">
+    <h1 class="page-title">Dashboard</h1>
+    <p class="page-subtitle">Your freelance hub at a glance</p>
+  </div>
+
+  @if (loading()) {
+    <div class="text-center py-5">
+      <div class="spinner-border" role="status"></div>
+    </div>
+  } @else {
+    <div class="row g-4">
+      @if (isClient()) {
+        <div class="col-md-4 fade-in stagger-1">
+          <div class="stat-card">
+            <div class="stat-icon mb-3">
+              <i class="bi bi-briefcase"></i>
+            </div>
+            <div class="stat-number">{{ myJobs().length }}</div>
+            <div class="stat-label">Posted Jobs</div>
+            <a routerLink="/jobs" class="btn btn-sm btn-outline-primary mt-3">
+              View All <i class="bi bi-arrow-right ms-1"></i>
+            </a>
+          </div>
+        </div>
+        <div class="col-md-4 fade-in stagger-2">
+          <div class="stat-card">
+            <div class="stat-icon mb-3">
+              <i class="bi bi-hand-thumbs-up"></i>
+            </div>
+            <div class="stat-number">{{ activeContracts().length }}</div>
+            <div class="stat-label">Active Contracts</div>
+            <a routerLink="/contracts" class="btn btn-sm btn-outline-primary mt-3">
+              View All <i class="bi bi-arrow-right ms-1"></i>
+            </a>
+          </div>
+        </div>
+      }
+
+      @if (isFreelancer()) {
+        <div class="col-md-4 fade-in stagger-1">
+          <div class="stat-card">
+            <div class="stat-icon mb-3">
+              <i class="bi bi-file-earmark-text"></i>
+            </div>
+            <div class="stat-number">{{ myProposals().length }}</div>
+            <div class="stat-label">My Proposals</div>
+            <a routerLink="/proposals/my-proposals" class="btn btn-sm btn-outline-primary mt-3">
+              View All <i class="bi bi-arrow-right ms-1"></i>
+            </a>
+          </div>
+        </div>
+        <div class="col-md-4 fade-in stagger-2">
+          <div class="stat-card">
+            <div class="stat-icon mb-3">
+              <i class="bi bi-hand-thumbs-up"></i>
+            </div>
+            <div class="stat-number">{{ activeContracts().length }}</div>
+            <div class="stat-label">Active Contracts</div>
+            <a routerLink="/contracts" class="btn btn-sm btn-outline-primary mt-3">
+              View All <i class="bi bi-arrow-right ms-1"></i>
+            </a>
+          </div>
+        </div>
+        @if (!hasFreelancerProfile()) {
+          <div class="col-md-4 fade-in stagger-3">
+            <div class="stat-card cta-card">
+              <div class="stat-icon mb-3">
+                <i class="bi bi-person-plus"></i>
+              </div>
+              <div class="stat-label mb-3">Complete Your Profile</div>
+              <p class="text-muted small mb-3">
+                Start receiving job opportunities by creating your freelancer profile
+              </p>
+              <a routerLink="/freelancers/create" class="btn btn-success">
+                Create Profile <i class="bi bi-arrow-right ms-1"></i>
+              </a>
+            </div>
+          </div>
+        }
+      }
+    </div>
+  }
+</div>

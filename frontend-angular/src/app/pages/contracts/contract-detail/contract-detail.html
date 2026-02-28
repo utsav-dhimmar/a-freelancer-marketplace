@@ -1,0 +1,70 @@
+<div class="container mt-4">
+  @if (loading()) {
+    <div class="text-center py-5">
+      <div class="spinner-border" role="status"></div>
+    </div>
+  } @else if (contract()) {
+    <div class="card">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-start mb-3">
+          <h2>{{ getJobTitle() }}</h2>
+          <span class="badge bg-primary">{{ contract()!.status }}</span>
+        </div>
+
+        <div class="row mb-4">
+          <div class="col-md-6">
+            <p><strong>Amount:</strong> \${{ contract()!.amount }}</p>
+            <p><strong>Start Date:</strong> {{ contract()!.startDate | date: 'medium' }}</p>
+            @if (contract()!.endDate) {
+              <p><strong>End Date:</strong> {{ contract()!.endDate | date: 'medium' }}</p>
+            }
+          </div>
+          <div class="col-md-6">
+            <p><strong>Client:</strong> {{ getClientName() }}</p>
+            <p><strong>Freelancer:</strong> {{ getFreelancerName() }}</p>
+          </div>
+        </div>
+
+        @if (isFreelancer() && contract()!.status === 'active') {
+          <div class="card mt-3">
+            <div class="card-body">
+              <h5>Submit Work</h5>
+              <div class="mb-3">
+                <label class="form-label">Work Description</label>
+                <textarea class="form-control" [(ngModel)]="submittedWork" rows="4"></textarea>
+              </div>
+              <button class="btn btn-primary" (click)="submitWork()">Submit Work</button>
+            </div>
+          </div>
+        }
+
+        @if (isClient() && contract()!.status === 'submitted') {
+          <div class="card mt-3">
+            <div class="card-body">
+              <h5>Review Submitted Work</h5>
+              <button class="btn btn-success me-2" (click)="completeContract()">
+                Mark as Complete
+              </button>
+            </div>
+          </div>
+        }
+
+        @if (contract()!.status !== 'completed' && contract()!.status !== 'disputed') {
+          <div class="card mt-3">
+            <div class="card-body">
+              <h5>Raise Dispute</h5>
+              <div class="mb-3">
+                <label class="form-label">Reason</label>
+                <textarea class="form-control" [(ngModel)]="disputeReason" rows="2"></textarea>
+              </div>
+              <button class="btn btn-danger" (click)="raiseDispute()">Raise Dispute</button>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  } @else {
+    <div class="alert alert-danger">Contract not found</div>
+  }
+  <a routerLink="/contracts" class="btn btn-link mt-3">Back to Contracts</a>
+</div>
