@@ -7,49 +7,69 @@
           @if (error()) {
             <div class="alert alert-danger">{{ error() }}</div>
           }
-          <form (ngSubmit)="onSubmit()">
+          <form [formGroup]="freelancerForm" (ngSubmit)="onSubmit()">
             <div class="mb-3">
               <label class="form-label">Professional Title</label>
               <input
                 type="text"
                 class="form-control"
-                [(ngModel)]="title"
-                name="title"
-                required
+                [class.is-invalid]="isFieldInvalid('title')"
+                formControlName="title"
                 placeholder="e.g., Full Stack Developer"
               />
+              <div class="invalid-feedback">
+                @if (freelancerForm.get('title')?.errors?.['required']) {
+                  Professional title is required.
+                } @else if (freelancerForm.get('title')?.errors?.['minlength']) {
+                  Title must be at least 5 characters long.
+                } @else if (freelancerForm.get('title')?.errors?.['maxlength']) {
+                  Title cannot exceed 100 characters.
+                }
+              </div>
             </div>
             <div class="mb-3">
               <label class="form-label">Bio</label>
               <textarea
                 class="form-control"
-                [(ngModel)]="bio"
-                name="bio"
+                [class.is-invalid]="isFieldInvalid('bio')"
+                formControlName="bio"
                 rows="4"
-                required
                 placeholder="Tell us about yourself..."
               ></textarea>
+              <div class="invalid-feedback">
+                @if (freelancerForm.get('bio')?.errors?.['required']) {
+                  Bio is required.
+                } @else if (freelancerForm.get('bio')?.errors?.['minlength']) {
+                  Bio must be at least 50 characters long.
+                }
+              </div>
             </div>
             <div class="mb-3">
               <label class="form-label">Hourly Rate ($)</label>
               <input
                 type="number"
                 class="form-control"
-                [(ngModel)]="hourlyRate"
-                name="hourlyRate"
-                required
-                min="0"
+                [class.is-invalid]="isFieldInvalid('hourlyRate')"
+                formControlName="hourlyRate"
               />
+              <div class="invalid-feedback">
+                @if (freelancerForm.get('hourlyRate')?.errors?.['required']) {
+                  Hourly rate is required.
+                } @else if (freelancerForm.get('hourlyRate')?.errors?.['min']) {
+                  Hourly rate must be at least $1.
+                }
+              </div>
             </div>
             <div class="mb-3">
               <label class="form-label">Skills (comma separated)</label>
               <input
                 type="text"
                 class="form-control"
-                [(ngModel)]="skillsInput"
-                name="skills"
+                [class.is-invalid]="isFieldInvalid('skillsInput')"
+                formControlName="skillsInput"
                 placeholder="e.g., JavaScript, React, Node.js"
               />
+              <div class="invalid-feedback">Skills are required.</div>
             </div>
             <div class="d-flex gap-2">
               <button type="submit" class="btn btn-primary" [disabled]="loading()">

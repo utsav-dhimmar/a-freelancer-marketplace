@@ -7,44 +7,62 @@
           @if (error()) {
             <div class="alert alert-danger">{{ error() }}</div>
           }
-          <form (ngSubmit)="onSubmit()">
+          <form [formGroup]="jobForm" (ngSubmit)="onSubmit()">
             <div class="mb-3">
               <label class="form-label">Job Title</label>
               <input
                 type="text"
                 class="form-control"
-                [(ngModel)]="title"
-                name="title"
-                required
-                minlength="10"
-                maxlength="100"
+                [class.is-invalid]="isFieldInvalid('title')"
+                formControlName="title"
+                placeholder="Job Title"
               />
+              <div class="invalid-feedback">
+                @if (jobForm.get('title')?.errors?.['required']) {
+                  Title is required.
+                } @else if (jobForm.get('title')?.errors?.['minlength']) {
+                  Title must be at least 10 characters long.
+                } @else if (jobForm.get('title')?.errors?.['maxlength']) {
+                  Title cannot exceed 100 characters.
+                }
+              </div>
             </div>
             <div class="mb-3">
               <label class="form-label">Description</label>
               <textarea
                 class="form-control"
-                [(ngModel)]="description"
-                name="description"
+                [class.is-invalid]="isFieldInvalid('description')"
+                formControlName="description"
                 rows="5"
-                required
+                placeholder="Job Description"
               ></textarea>
+              <div class="invalid-feedback">Description is required.</div>
             </div>
             <div class="row">
               <div class="col-md-6 mb-3">
                 <label class="form-label">Difficulty</label>
-                <select class="form-select" [(ngModel)]="difficulty" name="difficulty" required>
+                <select
+                  class="form-select"
+                  [class.is-invalid]="isFieldInvalid('difficulty')"
+                  formControlName="difficulty"
+                >
                   <option value="entry">Entry Level</option>
                   <option value="intermediate">Intermediate</option>
                   <option value="expert">Expert</option>
                 </select>
+                <div class="invalid-feedback">Difficulty is required.</div>
               </div>
               <div class="col-md-6 mb-3">
                 <label class="form-label">Budget Type</label>
-                <select class="form-select" [(ngModel)]="budgetType" name="budgetType" required>
+                <select
+                  class="form-select"
+                  [class.is-invalid]="isFieldInvalid('budgetType')"
+                  formControlName="budgetType"
+                >
                   <option value="fixed">Fixed Price</option>
                   <option value="hourly">Hourly Rate</option>
                 </select>
+                <div class="invalid-feedback">Budget type is required.</div>
               </div>
             </div>
             <div class="mb-3">
@@ -52,19 +70,24 @@
               <input
                 type="number"
                 class="form-control"
-                [(ngModel)]="budget"
-                name="budget"
-                required
-                min="0"
+                [class.is-invalid]="isFieldInvalid('budget')"
+                formControlName="budget"
+                placeholder="0"
               />
+              <div class="invalid-feedback">
+                @if (jobForm.get('budget')?.errors?.['required']) {
+                  Budget is required.
+                } @else if (jobForm.get('budget')?.errors?.['min']) {
+                  Budget must be 0 or greater.
+                }
+              </div>
             </div>
             <div class="mb-3">
               <label class="form-label">Required Skills (comma separated)</label>
               <input
                 type="text"
                 class="form-control"
-                [(ngModel)]="skillsInput"
-                name="skills"
+                formControlName="skillsInput"
                 placeholder="e.g., JavaScript, React, Node.js"
               />
             </div>
