@@ -1,0 +1,82 @@
+<div class="container mt-4">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-body">
+          <h3 class="mb-4">Post a New Job</h3>
+          @if (error()) {
+            <div class="alert alert-danger">{{ error() }}</div>
+          }
+          <form (ngSubmit)="onSubmit()">
+            <div class="mb-3">
+              <label class="form-label">Job Title</label>
+              <input
+                type="text"
+                class="form-control"
+                [(ngModel)]="title"
+                name="title"
+                required
+                minlength="10"
+                maxlength="100"
+              />
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Description</label>
+              <textarea
+                class="form-control"
+                [(ngModel)]="description"
+                name="description"
+                rows="5"
+                required
+              ></textarea>
+            </div>
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Difficulty</label>
+                <select class="form-select" [(ngModel)]="difficulty" name="difficulty" required>
+                  <option value="entry">Entry Level</option>
+                  <option value="intermediate">Intermediate</option>
+                  <option value="expert">Expert</option>
+                </select>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Budget Type</label>
+                <select class="form-select" [(ngModel)]="budgetType" name="budgetType" required>
+                  <option value="fixed">Fixed Price</option>
+                  <option value="hourly">Hourly Rate</option>
+                </select>
+              </div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Budget ($)</label>
+              <input
+                type="number"
+                class="form-control"
+                [(ngModel)]="budget"
+                name="budget"
+                required
+                min="0"
+              />
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Required Skills (comma separated)</label>
+              <input
+                type="text"
+                class="form-control"
+                [(ngModel)]="skillsInput"
+                name="skills"
+                placeholder="e.g., JavaScript, React, Node.js"
+              />
+            </div>
+            <div class="d-flex gap-2">
+              <button type="submit" class="btn btn-primary" [disabled]="loading()">
+                {{ loading() ? 'Posting...' : 'Post Job' }}
+              </button>
+              <a routerLink="/jobs" class="btn btn-secondary">Cancel</a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

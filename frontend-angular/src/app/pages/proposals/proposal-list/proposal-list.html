@@ -1,0 +1,60 @@
+<div class="container py-4">
+  <div class="page-header">
+    <h1 class="page-title">My Proposals</h1>
+    <p class="page-subtitle">Track your submitted job proposals</p>
+  </div>
+
+  @if (loading()) {
+    <div class="text-center py-5">
+      <div class="spinner-border" role="status"></div>
+    </div>
+  } @else if (proposals().length === 0) {
+    <div class="empty-state">
+      <div class="empty-icon">
+        <i class="bi bi-file-earmark-ruled"></i>
+      </div>
+      <h3>No Proposals Yet</h3>
+      <p>You haven't submitted any proposals. Browse available jobs and start applying!</p>
+      <a routerLink="/jobs" class="btn btn-primary">
+        <i class="bi bi-briefcase me-2"></i>Browse Jobs
+      </a>
+    </div>
+  } @else {
+    <div class="card">
+      <div class="table-responsive">
+        <table class="table table-hover mb-0">
+          <thead>
+            <tr>
+              <th>Job</th>
+              <th>Bid Amount</th>
+              <th>Estimated Time</th>
+              <th>Status</th>
+              <th>Submitted</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (proposal of proposals(); track proposal._id) {
+              <tr>
+                <td class="fw-semibold">{{ getJobTitle(proposal) }}</td>
+                <td class="fw-semibold text-success">\${{ proposal.bidAmount }}</td>
+                <td>{{ proposal.estimatedTime }}</td>
+                <td>
+                  <span
+                    class="badge"
+                    [class.bg-success]="proposal.status === 'accepted'"
+                    [class.bg-warning]="proposal.status === 'pending'"
+                    [class.bg-danger]="proposal.status === 'rejected'"
+                    [class.bg-info]="proposal.status === 'shortlisted'"
+                  >
+                    {{ proposal.status }}
+                  </span>
+                </td>
+                <td class="text-muted">{{ proposal.createdAt | date: 'medium' }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  }
+</div>

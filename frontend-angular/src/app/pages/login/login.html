@@ -1,0 +1,88 @@
+<div class="auth-page">
+  <div class="auth-container">
+    <div class="auth-card">
+      <div class="auth-header">
+        <div class="auth-icon">
+          <i class="bi bi-gem"></i>
+        </div>
+        <h1>Welcome Back</h1>
+        <p>Sign in to your FreelanceHub account</p>
+      </div>
+
+      @if (error()) {
+        <div class="alert alert-danger">
+          <i class="bi bi-exclamation-triangle me-2"></i>{{ error() }}
+        </div>
+      }
+
+      <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <div class="mb-4">
+          <label class="form-label" for="email">Email Address</label>
+          <div class="input-group">
+            <span class="input-group-text bg-transparent border-end-0">
+              <i class="bi bi-envelope text-muted"></i>
+            </span>
+            <input
+              id="email"
+              type="email"
+              class="form-control border-start-0"
+              formControlName="email"
+              [class.is-invalid]="form.get('email')?.invalid && form.get('email')?.touched"
+              autocomplete="email"
+              placeholder="you@example.com"
+            />
+          </div>
+          @if (form.get('email')?.invalid && form.get('email')?.touched) {
+            <div class="invalid-feedback d-block">
+              @if (form.get('email')?.hasError('required')) {
+                Email is required
+              } @else if (form.get('email')?.hasError('email')) {
+                Please enter a valid email
+              }
+            </div>
+          }
+        </div>
+
+        <div class="mb-4">
+          <label class="form-label" for="password">Password</label>
+          <div class="input-group">
+            <span class="input-group-text bg-transparent border-end-0">
+              <i class="bi bi-lock text-muted"></i>
+            </span>
+            <input
+              id="password"
+              type="password"
+              class="form-control border-start-0"
+              formControlName="password"
+              [class.is-invalid]="form.get('password')?.invalid && form.get('password')?.touched"
+              autocomplete="current-password"
+              placeholder="Enter your password"
+            />
+          </div>
+          @if (form.get('password')?.invalid && form.get('password')?.touched) {
+            <div class="invalid-feedback d-block">
+              @if (form.get('password')?.hasError('required')) {
+                Password is required
+              } @else if (form.get('password')?.hasError('minlength')) {
+                Password must be at least 6 characters
+              }
+            </div>
+          }
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100 py-2" [disabled]="loading()">
+          @if (loading()) {
+            <span class="spinner-border spinner-border-sm me-2"></span>
+            Signing in...
+          } @else {
+            <i class="bi bi-box-arrow-in-right me-2"></i>Sign In
+          }
+        </button>
+      </form>
+
+      <div class="auth-footer">
+        <p>Don't have an account? <a routerLink="/register">Create one</a></p>
+      </div>
+    </div>
+  </div>
+</div>

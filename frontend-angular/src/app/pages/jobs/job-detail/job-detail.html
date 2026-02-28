@@ -1,0 +1,78 @@
+<div class="container mt-4">
+  @if (loading()) {
+    <div class="text-center py-5">
+      <div class="spinner-border" role="status"></div>
+    </div>
+  } @else if (job()) {
+    <div class="card">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-start mb-3">
+          <h2>{{ job()!.title }}</h2>
+          <span class="badge bg-info">{{ job()!.status }}</span>
+        </div>
+
+        <div class="mb-3">
+          <span class="badge bg-success fs-6">\${{ job()!.budget }} {{ job()!.budgetType }}</span>
+          <span class="badge bg-secondary ms-2">{{ job()!.difficulty }}</span>
+        </div>
+
+        <h5>Description</h5>
+        <p>{{ job()!.description }}</p>
+
+        <h5>Required Skills</h5>
+        <div class="mb-3">
+          @for (skill of job()!.skillsRequired; track skill) {
+            <span class="badge bg-secondary me-1">{{ skill }}</span>
+          }
+        </div>
+
+        <div class="text-muted small mb-4">Posted: {{ job()!.createdAt | date: 'medium' }}</div>
+
+        @if (isFreelancer() && job()!.status === 'open') {
+          <button class="btn btn-primary" (click)="showProposalForm = true">Submit Proposal</button>
+        }
+
+        @if (showProposalForm) {
+          <div class="card mt-3">
+            <div class="card-body">
+              <h5>Submit Proposal</h5>
+              <div class="mb-3">
+                <label class="form-label">Cover Letter</label>
+                <textarea class="form-control" [(ngModel)]="coverLetter" rows="4"></textarea>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Bid Amount ($)</label>
+                <input type="number" class="form-control" [(ngModel)]="bidAmount" />
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Estimated Time</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  [(ngModel)]="estimatedTime"
+                  placeholder="e.g., 2 weeks"
+                />
+              </div>
+              <button class="btn btn-success me-2" (click)="submitProposal()">Submit</button>
+              <button class="btn btn-secondary" (click)="showProposalForm = false">Cancel</button>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+
+    @if (isClient() && isOwner()) {
+      <div class="card mt-4">
+        <div class="card-body">
+          <h5>Proposals</h5>
+          <a [routerLink]="['/jobs', job()!._id, 'proposals']" class="btn btn-outline-primary"
+            >View Proposals</a
+          >
+        </div>
+      </div>
+    }
+  } @else {
+    <div class="alert alert-danger">Job not found</div>
+  }
+  <a routerLink="/jobs" class="btn btn-link mt-3">Back to Jobs</a>
+</div>

@@ -1,0 +1,84 @@
+<div class="container mt-4">
+  @if (loading()) {
+    <div class="text-center py-5">
+      <div class="spinner-border" role="status"></div>
+    </div>
+  } @else if (freelancer()) {
+    <div class="row">
+      <div class="col-md-4">
+        <div class="card">
+          <div class="card-body text-center">
+            <img
+              [src]="getProfilePicture()"
+              class="rounded-circle mb-3"
+              width="150"
+              height="150"
+              alt="Profile"
+            />
+            <h4>{{ getFreelancerName() }}</h4>
+            <p class="text-muted">{{ freelancer()!.title }}</p>
+            <p class="fw-bold text-success fs-5">\${{ freelancer()!.hourlyRate }}/hr</p>
+            <div class="mb-2">
+              @for (skill of freelancer()!.skills; track skill) {
+                <span class="badge bg-secondary me-1 mb-1">{{ skill }}</span>
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-8">
+        <div class="card">
+          <div class="card-body">
+            <h5>About</h5>
+            <p>{{ freelancer()!.bio }}</p>
+
+            <h5 class="mt-4">Portfolio</h5>
+            @if (freelancer()!.portfolio.length > 0) {
+              <div class="row">
+                @for (item of freelancer()!.portfolio; track item.link) {
+                  <div class="col-md-6 mb-3">
+                    <div class="card">
+                      <div class="card-body">
+                        <h6>{{ item.title }}</h6>
+                        <p class="small">{{ item.desc }}</p>
+                        <a [href]="item.link" target="_blank" class="btn btn-sm btn-outline-primary"
+                          >View Project</a
+                        >
+                      </div>
+                    </div>
+                  </div>
+                }
+              </div>
+            } @else {
+              <p class="text-muted">No portfolio items</p>
+            }
+
+            <div class="row mt-4">
+              <div class="col-md-4">
+                <div class="text-center">
+                  <p class="fs-4 fw-bold">{{ freelancer()!.rating.toFixed(1) }}</p>
+                  <p class="text-muted">Rating</p>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="text-center">
+                  <p class="fs-4 fw-bold">{{ freelancer()!.reviewCount }}</p>
+                  <p class="text-muted">Reviews</p>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="text-center">
+                  <p class="fs-4 fw-bold">{{ freelancer()!.totalJobs }}</p>
+                  <p class="text-muted">Jobs Completed</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  } @else {
+    <div class="alert alert-danger">Freelancer not found</div>
+  }
+  <a routerLink="/freelancers" class="btn btn-link mt-3">Back to Freelancers</a>
+</div>

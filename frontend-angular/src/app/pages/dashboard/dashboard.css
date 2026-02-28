@@ -1,0 +1,39 @@
+.stat-icon {
+  width: 60px;
+  height: 60px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, rgba(201, 162, 39, 0.15) 0%, rgba(201, 162, 39, 0.05) 100%);
+  border-radius: 50%;
+}
+
+.stat-icon i {
+  font-size: 1.5rem;
+  color: var(--color-accent);
+}
+
+.cta-card {
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-light) 100%);
+  color: var(--color-surface);
+}
+
+.cta-card .stat-number {
+  display: none;
+}
+
+.cta-card .stat-label {
+  color: var(--color-surface);
+  font-size: 1.1rem;
+  font-family: var(--font-display);
+}
+
+.cta-card::before {
+  display: none;
+}
+
+.cta-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-xl);
+}

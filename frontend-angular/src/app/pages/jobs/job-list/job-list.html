@@ -1,0 +1,132 @@
+<div class="container py-4">
+  <div class="page-header">
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+      <div>
+        <h1 class="page-title">Browse Opportunities</h1>
+        <p class="page-subtitle">Find your next project from hundreds of jobs</p>
+      </div>
+      @if (isClient()) {
+        <a routerLink="/jobs/create" class="btn btn-primary">
+          <i class="bi bi-plus-lg me-2"></i>Post a Job
+        </a>
+      }
+    </div>
+  </div>
+
+  <div class="filter-bar">
+    <div class="row g-3 align-items-end">
+      <div class="col-md-4">
+        <label class="form-label">Search</label>
+        <div class="input-group">
+          <span class="input-group-text bg-transparent border-end-0">
+            <i class="bi bi-search text-muted"></i>
+          </span>
+          <input
+            type="text"
+            class="form-control border-start-0"
+            placeholder="Search jobs..."
+            [ngModel]="searchTerm()"
+            (ngModelChange)="searchTerm.set($event); search()"
+          />
+        </div>
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">Min Budget</label>
+        <div class="input-group">
+          <span class="input-group-text bg-transparent border-end-0">
+            <i class="bi bi-currency-dollar text-muted"></i>
+          </span>
+          <input
+            type="number"
+            class="form-control border-start-0"
+            placeholder="0"
+            [ngModel]="minBudget()"
+            (ngModelChange)="minBudget.set($event); search()"
+          />
+        </div>
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">Max Budget</label>
+        <div class="input-group">
+          <span class="input-group-text bg-transparent border-end-0">
+            <i class="bi bi-currency-dollar text-muted"></i>
+          </span>
+          <input
+            type="number"
+            class="form-control border-start-0"
+            placeholder="Any"
+            [ngModel]="maxBudget()"
+            (ngModelChange)="maxBudget.set($event); search()"
+          />
+        </div>
+      </div>
+      <div class="col-md-2">
+        <label class="form-label">Status</label>
+        <select
+          class="form-select"
+          [ngModel]="status()"
+          (ngModelChange)="status.set($event); search()"
+        >
+          <option value="">All</option>
+          <option value="open">Open</option>
+          <option value="in_progress">In Progress</option>
+          <option value="completed">Completed</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  @if (loading()) {
+    <div class="text-center py-5">
+      <div class="spinner-border" role="status"></div>
+    </div>
+  } @else if (jobs().length === 0) {
+    <div class="alert alert-info">
+      <i class="bi bi-info-circle me-2"></i>No jobs found matching your criteria
+    </div>
+  } @else {
+    <div class="row g-4">
+      @for (job of jobs(); track job._id; let i = $index) {
+        <div class="col-md-6 fade-in" [class]="'stagger-' + ((i % 5) + 1)">
+          <div class="job-card">
+            <div class="d-flex justify-content-between align-items-start mb-3">
+              <span class="job-status" [class]="getStatusClass(job.status)">
+                {{ job.status }}
+              </span>
+              <span class="job-budget">\${{ job.budget }}</span>
+            </div>
+            <h5 class="job-title">{{ job.title }}</h5>
+            <p class="job-description">
+              {{ job.description | slice: 0 : 180 }}{{ job.description.length > 180 ? '...' : '' }}
+            </p>
+            <div class="job-meta">
+              <span><i class="bi bi-tag"></i> {{ job.budgetType }}</span>
+              <span><i class="bi bi-clock"></i> Posted recently</span>
+            </div>
+            <div class="mb-3">
+              @for (skill of job.skillsRequired.slice(0, 4); track skill) {
+                <span class="skill-tag">{{ skill }}</span>
+              }
+              @if (job.skillsRequired.length > 4) {
+                <span class="skill-tag">+{{ job.skillsRequired.length - 4 }} more</span>
+              }
+            </div>
+            <div class="mt-auto pt-3 border-top">
+              <a [routerLink]="['/jobs', job._id]" class="btn btn-outline-primary btn-sm">
+                View Details <i class="bi bi-arrow-right ms-1"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+
+    @if (total() > jobs().length) {
+      <div class="text-center mt-5">
+        <button class="btn btn-secondary" (click)="loadMore()">
+          <i class="bi bi-arrow-down-circle me-2"></i>Load More Opportunities
+        </button>
+      </div>
+    }
+  }
+</div>
