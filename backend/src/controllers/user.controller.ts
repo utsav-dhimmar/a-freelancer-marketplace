@@ -140,9 +140,15 @@ export const login = asyncHandler(
       .status(HTTP_STATUS.OK)
       .cookie('accessToken', accessToken, {
         maxAge: TOKEN.ACCESSTOKEN_MAX_AGE,
+        httpOnly: true,
+        // secure: true,
+        sameSite: 'strict',
       })
       .cookie('refreshToken', refreshToken, {
         maxAge: TOKEN.REFRESHTOKEN_MAX_AGE,
+        httpOnly: true,
+        // secure: true,
+        sameSite: 'strict',
       })
       .json(
         new ApiResponse(HTTP_STATUS.OK, 'Login successful', {
