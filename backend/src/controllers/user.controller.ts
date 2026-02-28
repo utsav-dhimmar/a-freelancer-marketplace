@@ -68,14 +68,6 @@ export const register = asyncHandler(
       profilePicture,
     });
 
-    // Generate tokens
-    const userId = String(user._id);
-    const accessToken = generateAccessToken(userId);
-    const refreshToken = generateRefreshToken(userId);
-
-    // Save refresh token
-    await userService.updateRefreshToken(userId, refreshToken);
-
     res.status(HTTP_STATUS.CREATED).json(
       new ApiResponse(HTTP_STATUS.CREATED, 'User registered successfully', {
         user: {
@@ -87,8 +79,6 @@ export const register = asyncHandler(
           profilePicture: user.profilePicture,
           createdAt: user.createdAt,
         },
-        accessToken,
-        refreshToken,
       }),
     );
   },
@@ -161,8 +151,6 @@ export const login = asyncHandler(
             createdAt: user.createdAt,
             profilePicture: user?.profilePicture,
           },
-          accessToken,
-          refreshToken,
         }),
       );
   },

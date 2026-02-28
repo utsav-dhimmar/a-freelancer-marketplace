@@ -17,16 +17,8 @@ export const authMiddleware = async (
   next: NextFunction,
 ): Promise<void> => {
   try {
-    const authHeader = req.headers.authorization;
+    const token = req.cookies?.accessToken;
 
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      throw new ApiError(
-        HTTP_STATUS.UNAUTHORIZED,
-        'Access denied. No token provided.',
-      );
-    }
-
-    const token = authHeader.split(' ')[1];
     if (!token) {
       throw new ApiError(
         HTTP_STATUS.UNAUTHORIZED,

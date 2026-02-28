@@ -35,10 +35,9 @@ export class AuthService {
           return response.data;
         }),
         tap((response: AuthResponse) => {
-          localStorage.setItem('accessToken', response.accessToken);
-          localStorage.setItem('refreshToken', response.refreshToken);
           localStorage.setItem('user', JSON.stringify(response.user));
           this.currentUser.set(response.user);
+          this.router.navigate(['/dashboard']);
         }),
       );
   }
@@ -62,10 +61,7 @@ export class AuthService {
       .pipe(
         map((response: ApiResponse<AuthResponse>) => response.data),
         tap((response: AuthResponse) => {
-          localStorage.setItem('accessToken', response.accessToken);
-          localStorage.setItem('refreshToken', response.refreshToken);
-          localStorage.setItem('user', JSON.stringify(response.user));
-          this.currentUser.set(response.user);
+          this.router.navigate(['/login']);
         }),
       );
   }
@@ -117,16 +113,8 @@ export class AuthService {
       );
   }
 
-  getAccessToken(): string | null {
-    return localStorage.getItem('accessToken');
-  }
-
-  getRefreshToken(): string | null {
-    return localStorage.getItem('refreshToken');
-  }
-
   isAuthenticated(): boolean {
-    return !!this.getAccessToken();
+    return !!this.currentUser();
   }
 
   isClient(): boolean {
@@ -138,8 +126,6 @@ export class AuthService {
   }
 
   private clearStorage(): void {
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('refreshToken');
     localStorage.removeItem('user');
     this.currentUser.set(null);
     this.router.navigate(['/login']);
