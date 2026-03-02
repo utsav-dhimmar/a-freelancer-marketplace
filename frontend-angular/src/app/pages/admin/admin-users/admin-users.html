@@ -1,0 +1,171 @@
+<div class="admin-users">
+  <div class="page-header">
+    <h1 class="page-title">Users</h1>
+    <p class="page-subtitle">Manage all registered users ({{ total() }} total)</p>
+  </div>
+
+  @if (error()) {
+    <div class="alert alert-danger">{{ error() }}</div>
+  }
+
+  @if (loading()) {
+    <div class="loading-state">
+      <div class="spinner-border" role="status"></div>
+    </div>
+  } @else {
+    <!-- Table -->
+    <div class="table-wrapper">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>User</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Joined</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (user of users(); track user._id) {
+            <tr>
+              <td>
+                <div class="user-cell">
+                  <div class="user-avatar-sm">
+                    {{ user.fullname.charAt(0).toUpperCase() }}
+                  </div>
+                  <div>
+                    <div class="user-name">{{ user.fullname }}</div>
+                    <div class="user-username">&#64;{{ user.username }}</div>
+                  </div>
+                </div>
+              </td>
+              <td>{{ user.email }}</td>
+              <td>
+                <span class="role-badge" [class]="getRoleBadgeClass(user.role)">
+                  {{ user.role }}
+                </span>
+              </td>
+              <td>{{ user.createdAt | date: 'mediumDate' }}</td>
+              <td>
+                <div class="action-btns">
+                  <button class="btn btn-sm btn-outline-primary" (click)="openEdit(user)">
+                    Edit
+                  </button>
+                  <button class="btn btn-sm btn-outline-danger" (click)="confirmDelete(user)">
+                    Delete
+                  </button>
+                </div>
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="5" class="empty-state">No users found</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pagination -->
+    @if (totalPages() > 1) {
+      <div class="pagination">
+        <button
+          class="btn btn-sm btn-outline-primary"
+          [disabled]="page() <= 1"
+          (click)="changePage(page() - 1)"
+        >
+          ← Previous
+        </button>
+        @for (p of getPages(); track p) {
+          <button
+            class="btn btn-sm"
+            [class.btn-primary]="p === page()"
+            [class.btn-outline-primary]="p !== page()"
+            (click)="changePage(p)"
+          >
+            {{ p }}
+          </button>
+        }
+        <button
+          class="btn btn-sm btn-outline-primary"
+          [disabled]="page() >= totalPages()"
+          (click)="changePage(page() + 1)"
+        >
+          Next →
+        </button>
+      </div>
+    }
+  }
+
+  <!-- Edit Modal -->
+  @if (showEditModal()) {
+    <div class="modal-overlay" (click)="closeEdit()">
+      <div class="modal-content" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h3>Edit User</h3>
+          <button class="modal-close" (click)="closeEdit()">×</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label">Username</label>
+            <input type="text" class="form-control" [(ngModel)]="editForm.username" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Full Name</label>
+            <input type="text" class="form-control" [(ngModel)]="editForm.fullname" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Email</label>
+            <input type="email" class="form-control" [(ngModel)]="editForm.email" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Role</label>
+            <select class="form-select" [(ngModel)]="editForm.role">
+              <option value="client">Client</option>
+              <option value="freelancer">Freelancer</option>
+              <option value="admin">Admin</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" (click)="closeEdit()">Cancel</button>
+          <button class="btn btn-primary" (click)="saveUser()" [disabled]="saving()">
+            @if (saving()) {
+              <span class="spinner-border spinner-border-sm me-1"></span> Saving...
+            } @else {
+              Save Changes
+            }
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Delete Confirmation -->
+  @if (showDeleteConfirm()) {
+    <div class="modal-overlay" (click)="cancelDelete()">
+      <div class="modal-content modal-sm" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h3>Delete User</h3>
+          <button class="modal-close" (click)="cancelDelete()">×</button>
+        </div>
+        <div class="modal-body">
+          <p>
+            Are you sure you want to delete <strong>{{ deleteTarget()?.fullname }}</strong
+            >? This action cannot be undone.
+          </p>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" (click)="cancelDelete()">Cancel</button>
+          <button class="btn btn-danger" (click)="executeDelete()" [disabled]="deleting()">
+            @if (deleting()) {
+              <span class="spinner-border spinner-border-sm me-1"></span> Deleting...
+            } @else {
+              Delete User
+            }
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+</div>

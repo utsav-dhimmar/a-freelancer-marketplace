@@ -1,0 +1,137 @@
+<div class="admin-jobs">
+  <div class="page-header">
+    <h1 class="page-title">Jobs</h1>
+    <p class="page-subtitle">Manage all jobs ({{ total() }} total)</p>
+  </div>
+
+  <div class="filter-bar">
+    <div class="filter-row">
+      <div class="filter-group">
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Search by title or description..."
+          [(ngModel)]="searchQuery"
+          (keyup.enter)="search()"
+        />
+      </div>
+      <div class="filter-group">
+        <select class="form-select" [(ngModel)]="statusFilter" (change)="search()">
+          <option value="">All Statuses</option>
+          <option value="open">Open</option>
+          <option value="in_progress">In Progress</option>
+          <option value="completed">Completed</option>
+          <option value="cancelled">Cancelled</option>
+        </select>
+      </div>
+      <button class="btn btn-primary" (click)="search()">Search</button>
+    </div>
+  </div>
+
+  @if (error()) {
+    <div class="alert alert-danger">{{ error() }}</div>
+  }
+
+  @if (loading()) {
+    <div class="loading-state">
+      <div class="spinner-border" role="status"></div>
+    </div>
+  } @else {
+    <div class="table-wrapper">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Client</th>
+            <th>Budget</th>
+            <th>Status</th>
+            <th>Created</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (job of jobs(); track job._id) {
+            <tr>
+              <td>
+                <div class="job-title-cell">{{ job.title }}</div>
+              </td>
+              <td>{{ job.client?.fullname || 'N/A' }}</td>
+              <td class="budget-cell">${{ job.budget }}</td>
+              <td>
+                <span class="status-badge" [class]="getStatusClass(job.status)">
+                  {{ job.status.replace('_', ' ') }}
+                </span>
+              </td>
+              <td>{{ job.createdAt | date: 'mediumDate' }}</td>
+              <td>
+                <button class="btn btn-sm btn-outline-danger" (click)="confirmDelete(job)">
+                  Delete
+                </button>
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="6" class="empty-state">No jobs found</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    @if (totalPages() > 1) {
+      <div class="pagination">
+        <button
+          class="btn btn-sm btn-outline-primary"
+          [disabled]="page() <= 1"
+          (click)="changePage(page() - 1)"
+        >
+          ← Previous
+        </button>
+        @for (p of getPages(); track p) {
+          <button
+            class="btn btn-sm"
+            [class.btn-primary]="p === page()"
+            [class.btn-outline-primary]="p !== page()"
+            (click)="changePage(p)"
+          >
+            {{ p }}
+          </button>
+        }
+        <button
+          class="btn btn-sm btn-outline-primary"
+          [disabled]="page() >= totalPages()"
+          (click)="changePage(page() + 1)"
+        >
+          Next →
+        </button>
+      </div>
+    }
+  }
+
+  @if (showDeleteConfirm()) {
+    <div class="modal-overlay" (click)="cancelDelete()">
+      <div class="modal-content modal-sm" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h3>Delete Job</h3>
+          <button class="modal-close" (click)="cancelDelete()">×</button>
+        </div>
+        <div class="modal-body">
+          <p>
+            Are you sure you want to delete <strong>"{{ deleteTarget()?.title }}"</strong>? This
+            will also delete all related proposals.
+          </p>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" (click)="cancelDelete()">Cancel</button>
+          <button class="btn btn-danger" (click)="executeDelete()" [disabled]="deleting()">
+            @if (deleting()) {
+              <span class="spinner-border spinner-border-sm me-1"></span> Deleting...
+            } @else {
+              Delete Job
+            }
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+</div>

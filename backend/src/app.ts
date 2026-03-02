@@ -3,6 +3,7 @@ import cors from 'cors';
 import express from 'express';
 
 import { HTTP_STATUS } from './constants/index.js';
+import adminRoutes from './routes/admin.routes.js';
 import contractRoutes from './routes/contracts.routes.js';
 import freelancerRoutes from './routes/freelancer.routes.js';
 import jobRoutes from './routes/job.routes.js';
@@ -45,6 +46,7 @@ app.use('/api/freelancers', freelancerRoutes);
 app.use('/api/jobs', jobRoutes);
 app.use('/api/proposals', proposalRoutes);
 app.use('/api/contracts', contractRoutes);
+app.use('/api/admin', adminRoutes);
 
 app.use((req, res) => {
   return res

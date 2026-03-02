@@ -1,0 +1,101 @@
+.admin-dashboard {
+  max-width: 1200px;
+}
+
+.loading-state {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: var(--color-text-muted);
+}
+
+.loading-state .spinner-border {
+  width: 3rem;
+  height: 3rem;
+  margin-bottom: 1rem;
+}
+
+.stats-section {
+  margin-bottom: 2rem;
+}
+
+.stats-section-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--color-text);
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--color-bg-alt);
+}
+
+.stats-section-title svg {
+  color: var(--color-accent);
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.25rem;
+}
+
+.stats-grid-5 {
+  grid-template-columns: repeat(5, 1fr);
+}
+
+.stats-grid-single {
+  max-width: 240px;
+}
+
+.stats-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 2rem;
+}
+
+.stat-card-large {
+  padding: 2.5rem 1.75rem;
+}
+
+/* Accent colour top borders */
+.stat-card.accent-green::before {
+  background: var(--color-success);
+  transform: scaleX(1);
+}
+
+.stat-card.accent-blue::before {
+  background: var(--color-info);
+  transform: scaleX(1);
+}
+
+.stat-card.accent-gold::before {
+  background: var(--color-accent);
+  transform: scaleX(1);
+}
+
+.stat-card.accent-red::before {
+  background: var(--color-danger);
+  transform: scaleX(1);
+}
+
+@media (max-width: 1024px) {
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .stats-grid-5 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .stats-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 576px) {
+  .stats-grid,
+  .stats-grid-5 {
+    grid-template-columns: 1fr 1fr;
+  }
+}

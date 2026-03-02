@@ -37,6 +37,18 @@ export const API_ENDPOINTS = {
     COMPLETE: (id: string) => `/api/contracts/${id}/complete`,
     DISPUTE: (id: string) => `/api/contracts/${id}/dispute`,
   },
+  ADMIN: {
+    LOGIN: '/api/admin/login',
+    DASHBOARD: '/api/admin',
+    USERS: '/api/admin/users',
+    USER_ID: (id: string) => `/api/admin/users/${id}`,
+    JOBS: '/api/admin/jobs',
+    JOB_ID: (id: string) => `/api/admin/jobs/${id}`,
+    CONTRACTS: '/api/admin/contracts',
+    CONTRACT_STATUS: (id: string) => `/api/admin/contracts/${id}/status`,
+    REVIEWS: '/api/admin/reviews',
+    REVIEW_ID: (id: string) => `/api/admin/reviews/${id}`,
+  },
 } as const;
 
 export const HTTP_STATUS = {

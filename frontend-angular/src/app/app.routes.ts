@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { authGuard, guestGuard } from './guards';
+import { authGuard, guestGuard, adminGuard } from './guards';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/jobs', pathMatch: 'full' },
@@ -80,5 +80,50 @@ export const routes: Routes = [
     path: 'dashboard',
     loadComponent: () => import('./pages/dashboard/dashboard').then((m) => m.DashboardComponent),
     canActivate: [authGuard],
+  },
+
+  // ─── Admin Routes ──────────────────────────────────────────────
+  {
+    path: 'admin/login',
+    loadComponent: () =>
+      import('./pages/admin/admin-login/admin-login').then((m) => m.AdminLoginComponent),
+  },
+  {
+    path: 'admin',
+    loadComponent: () =>
+      import('./pages/admin/admin-layout/admin-layout').then((m) => m.AdminLayoutComponent),
+    canActivate: [adminGuard],
+    children: [
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+      {
+        path: 'dashboard',
+        loadComponent: () =>
+          import('./pages/admin/admin-dashboard/admin-dashboard').then(
+            (m) => m.AdminDashboardComponent,
+          ),
+      },
+      {
+        path: 'users',
+        loadComponent: () =>
+          import('./pages/admin/admin-users/admin-users').then((m) => m.AdminUsersComponent),
+      },
+      {
+        path: 'jobs',
+        loadComponent: () =>
+          import('./pages/admin/admin-jobs/admin-jobs').then((m) => m.AdminJobsComponent),
+      },
+      {
+        path: 'contracts',
+        loadComponent: () =>
+          import('./pages/admin/admin-contracts/admin-contracts').then(
+            (m) => m.AdminContractsComponent,
+          ),
+      },
+      {
+        path: 'reviews',
+        loadComponent: () =>
+          import('./pages/admin/admin-reviews/admin-reviews').then((m) => m.AdminReviewsComponent),
+      },
+    ],
   },
 ];

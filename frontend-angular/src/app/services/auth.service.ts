@@ -125,6 +125,10 @@ export class AuthService {
     return this.currentUser()?.role === 'freelancer';
   }
 
+  isAdmin(): boolean {
+    return this.currentUser()?.role === 'admin';
+  }
+
   private clearStorage(): void {
     localStorage.removeItem('user');
     this.currentUser.set(null);

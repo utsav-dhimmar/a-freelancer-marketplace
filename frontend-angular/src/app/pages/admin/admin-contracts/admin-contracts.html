@@ -1,0 +1,113 @@
+<div class="admin-contracts">
+  <div class="page-header">
+    <h1 class="page-title">Contracts</h1>
+    <p class="page-subtitle">Manage all contracts ({{ total() }} total)</p>
+  </div>
+
+  <div class="filter-bar">
+    <div class="filter-row">
+      <div class="filter-group">
+        <select class="form-select" [(ngModel)]="statusFilter" (change)="filterByStatus()">
+          <option value="">All Statuses</option>
+          <option value="active">Active</option>
+          <option value="submitted">Submitted</option>
+          <option value="completed">Completed</option>
+          <option value="disputed">Disputed</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  @if (error()) {
+    <div class="alert alert-danger">{{ error() }}</div>
+  }
+
+  @if (loading()) {
+    <div class="loading-state">
+      <div class="spinner-border" role="status"></div>
+    </div>
+  } @else {
+    <div class="table-wrapper">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Job</th>
+            <th>Client</th>
+            <th>Freelancer</th>
+            <th>Amount</th>
+            <th>Status</th>
+            <th>Created</th>
+            <th>Update Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (contract of contracts(); track contract._id) {
+            <tr>
+              <td>
+                <div class="job-title-cell">{{ contract.job?.title || 'N/A' }}</div>
+              </td>
+              <td>{{ contract.client?.fullname || 'N/A' }}</td>
+              <td>{{ contract.freelancer?.fullname || 'N/A' }}</td>
+              <td class="amount-cell">${{ contract.amount }}</td>
+              <td>
+                <span class="status-badge" [class]="getStatusClass(contract.status)">{{
+                  contract.status
+                }}</span>
+              </td>
+              <td>{{ contract.createdAt | date: 'mediumDate' }}</td>
+              <td>
+                <select
+                  class="form-select form-select-sm status-select"
+                  [ngModel]="contract.status"
+                  (ngModelChange)="updateStatus(contract, $event)"
+                  [disabled]="updatingId() === contract._id"
+                >
+                  <option value="active">Active</option>
+                  <option value="submitted">Submitted</option>
+                  <option value="completed">Completed</option>
+                  <option value="disputed">Disputed</option>
+                </select>
+                @if (updatingId() === contract._id) {
+                  <span class="spinner-border spinner-border-sm ms-1"></span>
+                }
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="7" class="empty-state">No contracts found</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    @if (totalPages() > 1) {
+      <div class="pagination">
+        <button
+          class="btn btn-sm btn-outline-primary"
+          [disabled]="page() <= 1"
+          (click)="changePage(page() - 1)"
+        >
+          ← Previous
+        </button>
+        @for (p of getPages(); track p) {
+          <button
+            class="btn btn-sm"
+            [class.btn-primary]="p === page()"
+            [class.btn-outline-primary]="p !== page()"
+            (click)="changePage(p)"
+          >
+            {{ p }}
+          </button>
+        }
+        <button
+          class="btn btn-sm btn-outline-primary"
+          [disabled]="page() >= totalPages()"
+          (click)="changePage(page() + 1)"
+        >
+          Next →
+        </button>
+      </div>
+    }
+  }
+</div>
