@@ -3,6 +3,7 @@ export type RegisterRole = 'client' | 'freelancer';
 
 export interface User {
   _id: string;
+  id?: string;
   username: string;
   fullname: string;
   email: string;

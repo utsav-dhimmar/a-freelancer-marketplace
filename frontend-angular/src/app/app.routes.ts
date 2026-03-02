@@ -71,6 +71,12 @@ export const routes: Routes = [
       ),
   },
   {
+    path: 'me',
+    loadComponent: () =>
+      import('./pages/profile/my-profile/my-profile').then((m) => m.MyProfileComponent),
+    canActivate: [authGuard],
+  },
+  {
     path: 'dashboard',
     loadComponent: () => import('./pages/dashboard/dashboard').then((m) => m.DashboardComponent),
     canActivate: [authGuard],

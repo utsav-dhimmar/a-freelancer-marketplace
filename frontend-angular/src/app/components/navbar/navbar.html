@@ -37,9 +37,14 @@
       <ul class="navbar-nav">
         @if (isLoggedIn()) {
           <li class="nav-item">
-            <span class="nav-link user-greeting">
+            <a
+              class="nav-link user-greeting"
+              routerLink="/me"
+              routerLinkActive="active"
+              style="cursor: pointer"
+            >
               <i class="bi bi-person-circle me-1"></i>Welcome, {{ getUserName() }}
-            </span>
+            </a>
           </li>
           <li class="nav-item">
             <button class="btn btn-outline-light btn-sm" (click)="logout()">

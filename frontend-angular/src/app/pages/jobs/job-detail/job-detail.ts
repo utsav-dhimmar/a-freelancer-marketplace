@@ -51,15 +51,19 @@ export class JobDetailComponent implements OnInit {
   }
 
   isClient(): boolean {
+    console.log({ client: this.authService.isClient() });
     return this.authService.isClient();
   }
 
   isOwner(): boolean {
-    const user: User | null = this.authService.user();
-    const currentJob: Job | null = this.job();
+    const user = this.authService.user();
+    const currentJob = this.job();
     if (!user || !currentJob) return false;
     const jobClient = currentJob.client;
-    return jobClient._id === user._id;
+    const clientId = typeof jobClient === 'string' ? jobClient : jobClient?._id;
+    const userId = user._id || user.id;
+    console.log({ jobClient, user, owner: clientId === userId });
+    return clientId === userId;
   }
 
   submitProposal(): void {
