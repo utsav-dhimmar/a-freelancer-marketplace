@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { FreelancerService } from '../../../services';
 import type { Freelancer, FreelancerSearchParams } from '../../../types/freelancer.types';
+import { API_BASE_URL } from '../../../constants/api';
 
 @Component({
   selector: 'app-freelancer-list',
@@ -62,7 +63,9 @@ export class FreelancerListComponent implements OnInit {
 
   getFreelancerProfilePicture(freelancer: Freelancer): string {
     if (typeof freelancer.user === 'object' && freelancer.user?.profilePicture) {
-      return freelancer.user.profilePicture;
+      const picture = freelancer.user.profilePicture;
+      if (picture.startsWith('http')) return picture;
+      return `${API_BASE_URL}${picture}`;
     }
     return 'https://via.placeholder.com/100';
   }

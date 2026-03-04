@@ -3,6 +3,7 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { ContractService, ProposalService } from '../../../services';
 import type { Proposal, ProposalStatus } from '../../../types/proposal.types';
+import { API_BASE_URL } from '../../../constants/api';
 
 @Component({
   selector: 'app-job-proposals',
@@ -46,7 +47,9 @@ export class JobProposalsComponent implements OnInit {
 
   getFreelancerPicture(proposal: Proposal): string {
     if (typeof proposal.freelancer === 'object' && proposal.freelancer?.profilePicture) {
-      return proposal.freelancer.profilePicture;
+      const picture = proposal.freelancer.profilePicture;
+      if (picture.startsWith('http')) return picture;
+      return `${API_BASE_URL}${picture}`;
     }
     return 'https://via.placeholder.com/50';
   }

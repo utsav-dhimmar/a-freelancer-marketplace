@@ -3,6 +3,7 @@ import { RouterLink } from '@angular/router';
 import { DatePipe } from '@angular/common';
 import { AuthService } from '../../../services/auth.service';
 import type { User } from '../../../types/auth.types';
+import { API_BASE_URL } from '../../../constants/api';
 
 @Component({
   selector: 'app-my-profile',
@@ -34,6 +35,9 @@ export class MyProfileComponent implements OnInit {
   getProfilePicture(): string {
     const currentUser = this.user();
     if (!currentUser) return 'https://via.placeholder.com/150';
-    return currentUser.profilePicture || 'https://via.placeholder.com/150';
+    const picture = currentUser.profilePicture;
+    if (!picture) return 'https://via.placeholder.com/150';
+    if (picture.startsWith('http')) return picture;
+    return `${API_BASE_URL}${picture}`;
   }
 }

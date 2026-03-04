@@ -2,6 +2,7 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { FreelancerService } from '../../../services';
 import type { Freelancer } from '../../../types/freelancer.types';
+import { API_BASE_URL } from '../../../constants/api';
 
 @Component({
   selector: 'app-freelancer-profile',
@@ -52,7 +53,9 @@ export class FreelancerProfileComponent implements OnInit {
     const currentFreelancer: Freelancer | null = this.freelancer();
     if (!currentFreelancer) return 'https://via.placeholder.com/150';
     if (typeof currentFreelancer.user === 'object' && currentFreelancer.user?.profilePicture) {
-      return currentFreelancer.user.profilePicture;
+      const picture = currentFreelancer.user.profilePicture;
+      if (picture.startsWith('http')) return picture;
+      return `${API_BASE_URL}${picture}`;
     }
     return 'https://via.placeholder.com/150';
   }
