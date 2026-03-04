@@ -1,15 +1,27 @@
 import { SlicePipe } from '@angular/common';
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, type OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import {
+  EmptyStateComponent,
+  LoadingSpinnerComponent,
+  UserAvatarComponent,
+} from '../../../components/ui';
+import { API_BASE_URL } from '../../../constants/api';
 import { FreelancerService } from '../../../services';
 import type { Freelancer, FreelancerSearchParams } from '../../../types/freelancer.types';
-import { API_BASE_URL } from '../../../constants/api';
 
 @Component({
   selector: 'app-freelancer-list',
   standalone: true,
-  imports: [RouterLink, FormsModule, SlicePipe],
+  imports: [
+    RouterLink,
+    FormsModule,
+    SlicePipe,
+    LoadingSpinnerComponent,
+    EmptyStateComponent,
+    UserAvatarComponent,
+  ],
   templateUrl: './freelancer-list.html',
   styleUrl: './freelancer-list.css',
 })

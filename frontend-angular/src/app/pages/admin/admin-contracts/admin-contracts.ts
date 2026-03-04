@@ -1,13 +1,26 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
+import { Component, inject, type OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import {
+  EmptyStateComponent,
+  LoadingSpinnerComponent,
+  PaginationComponent,
+  StatusBadgeComponent,
+} from '../../../components';
 import { AdminService } from '../../../services';
 import type { AdminContract } from '../../../types/admin.types';
 
 @Component({
   selector: 'app-admin-contracts',
   standalone: true,
-  imports: [FormsModule, DatePipe],
+  imports: [
+    FormsModule,
+    DatePipe,
+    LoadingSpinnerComponent,
+    EmptyStateComponent,
+    StatusBadgeComponent,
+    PaginationComponent,
+  ],
   templateUrl: './admin-contracts.html',
   styleUrl: './admin-contracts.css',
 })
@@ -53,7 +66,6 @@ export class AdminContractsComponent implements OnInit {
   }
 
   changePage(newPage: number): void {
-    if (newPage < 1 || newPage > this.totalPages()) return;
     this.page.set(newPage);
     this.loadContracts();
   }
@@ -71,30 +83,5 @@ export class AdminContractsComponent implements OnInit {
         this.updatingId.set(null);
       },
     });
-  }
-
-  getStatusClass(status: string): string {
-    switch (status) {
-      case 'active':
-        return 'status-active';
-      case 'submitted':
-        return 'status-submitted';
-      case 'completed':
-        return 'status-completed';
-      case 'disputed':
-        return 'status-disputed';
-      default:
-        return '';
-    }
-  }
-
-  getPages(): number[] {
-    const pages: number[] = [];
-    const total = this.totalPages();
-    const current = this.page();
-    const start = Math.max(1, current - 2);
-    const end = Math.min(total, current + 2);
-    for (let i = start; i <= end; i++) pages.push(i);
-    return pages;
   }
 }

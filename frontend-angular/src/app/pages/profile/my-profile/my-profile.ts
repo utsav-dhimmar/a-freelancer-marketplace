@@ -1,9 +1,9 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
-import { RouterLink } from '@angular/router';
 import { DatePipe } from '@angular/common';
+import { Component, inject, type OnInit, signal } from '@angular/core';
+import { RouterLink } from '@angular/router';
+import { API_BASE_URL } from '../../../constants/api';
 import { AuthService } from '../../../services/auth.service';
 import type { User } from '../../../types/auth.types';
-import { API_BASE_URL } from '../../../constants/api';
 
 @Component({
   selector: 'app-my-profile',

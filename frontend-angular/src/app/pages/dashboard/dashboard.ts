@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, type OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import {
   AuthService,
@@ -8,9 +8,9 @@ import {
   JobService,
   ProposalService,
 } from '../../services';
+import type { Contract } from '../../types/contract.types';
 import type { Job } from '../../types/job.types';
 import type { Proposal } from '../../types/proposal.types';
-import type { Contract } from '../../types/contract.types';
 
 @Component({
   selector: 'app-dashboard',

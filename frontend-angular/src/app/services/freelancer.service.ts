@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, signal } from '@angular/core';
-import { map, Observable, tap } from 'rxjs';
+import { map, type Observable, tap } from 'rxjs';
 import { API_BASE_URL, API_ENDPOINTS } from '../constants/api';
 import type { ApiResponse } from '../types/api.types';
 import type {
@@ -25,9 +25,9 @@ export class FreelancerService {
       .set('page', page.toString())
       .set('limit', limit.toString());
     return this.http
-      .get<
-        ApiResponse<FreelancersResponse>
-      >(`${API_BASE_URL}${API_ENDPOINTS.FREELANCERS.BASE}`, { params })
+      .get<ApiResponse<FreelancersResponse>>(`${API_BASE_URL}${API_ENDPOINTS.FREELANCERS.BASE}`, {
+        params,
+      })
       .pipe(
         map((response: ApiResponse<FreelancersResponse>) => response.data),
         tap((response: FreelancersResponse) => this.freelancers.set(response.freelancers)),
@@ -43,9 +43,9 @@ export class FreelancerService {
     if (searchParams.page) params = params.set('page', searchParams.page.toString());
     if (searchParams.limit) params = params.set('limit', searchParams.limit.toString());
     return this.http
-      .get<
-        ApiResponse<FreelancersResponse>
-      >(`${API_BASE_URL}${API_ENDPOINTS.FREELANCERS.SEARCH}`, { params })
+      .get<ApiResponse<FreelancersResponse>>(`${API_BASE_URL}${API_ENDPOINTS.FREELANCERS.SEARCH}`, {
+        params,
+      })
       .pipe(map((response: ApiResponse<FreelancersResponse>) => response.data));
   }
 

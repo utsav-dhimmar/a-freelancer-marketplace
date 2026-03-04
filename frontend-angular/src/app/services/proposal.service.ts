@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, signal } from '@angular/core';
-import { map, Observable } from 'rxjs';
+import { map, type Observable } from 'rxjs';
 import { API_BASE_URL, API_ENDPOINTS } from '../constants/api';
 import type { ApiResponse } from '../types/api.types';
 import type {

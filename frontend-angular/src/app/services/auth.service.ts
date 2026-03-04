@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, signal } from '@angular/core';
 import { Router } from '@angular/router';
-import { map, Observable, tap } from 'rxjs';
+import { map, type Observable, tap } from 'rxjs';
 import { API_BASE_URL, API_ENDPOINTS } from '../constants/api';
 import type { ApiResponse } from '../types/api.types';
 import type { AuthResponse, LoginRequest, RegisterRequest, User } from '../types/auth.types';
@@ -52,7 +52,9 @@ export class AuthService {
 
     if (data.profilePicture) {
       const file: Blob = this.base64ToBlob(data.profilePicture);
-      const profileFile: File = new File([file], 'profile.jpg', { type: 'image/jpeg' });
+      const profileFile: File = new File([file], 'profile.jpg', {
+        type: 'image/jpeg',
+      });
       formData.append('profilePicture', profileFile);
     }
 

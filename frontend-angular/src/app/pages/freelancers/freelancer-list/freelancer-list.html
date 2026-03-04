@@ -1,108 +1,153 @@
-<div class="container py-4">
-  <div class="page-header">
-    <h1 class="page-title">Talent Directory</h1>
-    <p class="page-subtitle">Discover skilled professionals for your projects</p>
+<div class="container py-5">
+  <div class="row mb-5 align-items-end">
+    <div class="col">
+      <h1 class="h2 fw-bold mb-1">Talent Directory</h1>
+      <p class="text-muted mb-0">Discover skilled professionals for your projects</p>
+    </div>
   </div>
 
-  <div class="filter-bar">
-    <div class="row g-3 align-items-end">
-      <div class="col-md-4">
-        <label class="form-label">Search by Skills</label>
-        <div class="input-group">
-          <span class="input-group-text bg-transparent border-end-0">
-            <i class="bi bi-search text-muted"></i>
-          </span>
-          <input
-            type="text"
-            class="form-control border-start-0"
-            placeholder="e.g. React, Python, Design..."
-            [(ngModel)]="skills"
-            (input)="search()"
-          />
+  <div class="card shadow-sm border-0 mb-5">
+    <div class="card-body p-4">
+      <div class="row g-3 align-items-end">
+        <div class="col-lg-4 col-md-6">
+          <label class="form-label text-uppercase fw-bold small text-muted">Search by Skills</label>
+          <div class="input-group">
+            <span class="input-group-text bg-light">
+              <i class="bi bi-search text-muted"></i>
+            </span>
+            <input
+              type="text"
+              class="form-control bg-light"
+              placeholder="e.g. React, Python, Design..."
+              [(ngModel)]="skills"
+              (input)="search()"
+            />
+          </div>
         </div>
-      </div>
-      <div class="col-md-3">
-        <label class="form-label">Min Hourly Rate</label>
-        <div class="input-group">
-          <span class="input-group-text bg-transparent border-end-0">
-            <i class="bi bi-currency-dollar text-muted"></i>
-          </span>
-          <input
-            type="number"
-            class="form-control border-start-0"
-            placeholder="0"
-            [(ngModel)]="minRate"
-            (input)="search()"
-          />
+        <div class="col-lg-3 col-md-6">
+          <label class="form-label text-uppercase fw-bold small text-muted">Min Hourly Rate</label>
+          <div class="input-group">
+            <span class="input-group-text bg-light">
+              <i class="bi bi-currency-dollar text-muted"></i>
+            </span>
+            <input
+              type="number"
+              class="form-control bg-light"
+              placeholder="0"
+              [(ngModel)]="minRate"
+              (input)="search()"
+            />
+          </div>
         </div>
-      </div>
-      <div class="col-md-3">
-        <label class="form-label">Max Hourly Rate</label>
-        <div class="input-group">
-          <span class="input-group-text bg-transparent border-end-0">
-            <i class="bi bi-currency-dollar text-muted"></i>
-          </span>
-          <input
-            type="number"
-            class="form-control border-start-0"
-            placeholder="Any"
-            [(ngModel)]="maxRate"
-            (input)="search()"
-          />
+        <div class="col-lg-3 col-md-6">
+          <label class="form-label text-uppercase fw-bold small text-muted">Max Hourly Rate</label>
+          <div class="input-group">
+            <span class="input-group-text bg-light">
+              <i class="bi bi-currency-dollar text-muted"></i>
+            </span>
+            <input
+              type="number"
+              class="form-control bg-light"
+              placeholder="Any"
+              [(ngModel)]="maxRate"
+              (input)="search()"
+            />
+          </div>
         </div>
-      </div>
-      <div class="col-md-2">
-        <button class="btn btn-outline-secondary w-100" (click)="clearFilters()">
-          <i class="bi bi-x-circle me-1"></i>Clear
-        </button>
+        <div class="col-lg-2 col-md-6">
+          <button class="btn btn-warning w-100 fw-bold py-2" (click)="clearFilters()">
+            <i class="bi bi-x-circle me-1"></i> Clear Filters
+          </button>
+        </div>
       </div>
     </div>
   </div>
 
   @if (loading()) {
-    <div class="text-center py-5">
-      <div class="spinner-border" role="status"></div>
+    <div class="d-flex flex-column align-items-center justify-content-center py-5">
+      <div class="spinner-border text-warning mb-3" role="status"></div>
+      <p class="text-muted">Finding top talent for you...</p>
     </div>
   } @else if (freelancers().length === 0) {
-    <div class="alert alert-info">
-      <i class="bi bi-info-circle me-2"></i>No freelancers found matching your criteria
-    </div>
+    <app-empty-state
+      icon="bi-people"
+      title="No freelancers found"
+      message="We couldn't find any freelancers matching your search. Try broadening your criteria."
+    >
+      <button class="btn btn-warning fw-bold px-4" (click)="clearFilters()">Reset Filters</button>
+    </app-empty-state>
   } @else {
     <div class="row g-4">
       @for (freelancer of freelancers(); track freelancer._id; let i = $index) {
-        <div class="col-md-4 fade-in" [class]="'stagger-' + ((i % 5) + 1)">
-          <div class="freelancer-card">
-            <img
-              [src]="getFreelancerProfilePicture(freelancer)"
-              class="freelancer-avatar"
-              [alt]="getFreelancerName(freelancer)"
-            />
-            <h5 class="freelancer-name">{{ getFreelancerName(freelancer) }}</h5>
-            <p class="freelancer-title">{{ freelancer.title }}</p>
-            <p class="text-muted small mb-3">
-              {{ freelancer.bio | slice: 0 : 100
-              }}{{ freelancer.bio && freelancer.bio.length > 100 ? '...' : '' }}
-            </p>
-            <div class="freelancer-rate">\${{ freelancer.hourlyRate }}<span>/hr</span></div>
-            <div class="mb-3">
-              @for (skill of freelancer.skills.slice(0, 4); track skill) {
-                <span class="skill-tag">{{ skill }}</span>
-              }
-              @if (freelancer.skills.length > 4) {
-                <span class="skill-tag">+{{ freelancer.skills.length - 4 }}</span>
-              }
-            </div>
-            <div class="mt-auto pt-3 border-top">
-              <a
-                [routerLink]="['/freelancers', freelancer._id]"
-                class="btn btn-outline-primary w-100"
-              >
-                View Profile <i class="bi bi-arrow-right ms-1"></i>
-              </a>
+        <div class="col-lg-4 col-md-6 fade-in" [class]="'stagger-' + ((i % 5) + 1)">
+          <div class="card h-100 shadow-sm border-0 hover-lift overflow-hidden">
+            <div class="card-body p-4 text-center d-flex flex-column">
+              <div class="position-relative d-inline-block mx-auto mb-4">
+                <app-user-avatar
+                  [src]="getFreelancerProfilePicture(freelancer)"
+                  [name]="getFreelancerName(freelancer)"
+                  [size]="100"
+                  class="d-block rounded-circle shadow-sm"
+                ></app-user-avatar>
+                <span
+                  class="position-absolute bottom-0 end-0 bg-success border border-white border-2 rounded-circle p-2"
+                  title="Online"
+                ></span>
+              </div>
+
+              <h5 class="fw-bold mb-1">{{ getFreelancerName(freelancer) }}</h5>
+              <p class="text-warning small fw-bold mb-3">{{ freelancer.title }}</p>
+
+              <div class="mb-4">
+                <div class="h3 fw-bold mb-0 text-dark">
+                  ${{ freelancer.hourlyRate }}<span class="small text-muted fw-normal">/hr</span>
+                </div>
+              </div>
+
+              <p class="text-muted small mb-4 flex-grow-1">
+                {{ freelancer.bio || '' | slice: 0 : 120
+                }}{{ (freelancer.bio || '').length > 120 ? '...' : '' }}
+              </p>
+
+              <div class="mb-4">
+                <div class="d-flex flex-wrap justify-content-center gap-1">
+                  @for (skill of (freelancer.skills || []).slice(0, 3); track skill) {
+                    <span class="skill-tag px-2 py-1">{{ skill }}</span>
+                  }
+                  @if ((freelancer.skills || []).length > 3) {
+                    <span class="skill-tag px-2 py-1">+{{ freelancer.skills.length - 3 }}</span>
+                  }
+                </div>
+              </div>
+
+              <div class="mt-auto">
+                <a
+                  [routerLink]="['/freelancers', freelancer._id]"
+                  class="btn btn-outline-primary w-100 py-2 fw-bold"
+                >
+                  View Full Profile
+                </a>
+              </div>
             </div>
           </div>
         </div>
       }
+    </div>
+
+    <div class="text-center mt-5">
+      <nav aria-label="Talent pagination">
+        <ul class="pagination justify-content-center">
+          <li class="page-item disabled">
+            <a class="page-item"><span class="page-link">Previous</span></a>
+          </li>
+          <li class="page-item active">
+            <a class="page-link bg-warning border-warning text-dark fw-bold">1</a>
+          </li>
+          <li class="page-item"><a class="page-link text-dark">2</a></li>
+          <li class="page-item"><a class="page-link text-dark">3</a></li>
+          <li class="page-item"><a class="page-link text-dark">Next</a></li>
+        </ul>
+      </nav>
     </div>
   }
 </div>

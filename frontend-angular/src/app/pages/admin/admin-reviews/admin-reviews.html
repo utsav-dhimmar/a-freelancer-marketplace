@@ -7,11 +7,8 @@
   @if (error()) {
     <div class="alert alert-danger">{{ error() }}</div>
   }
-
   @if (loading()) {
-    <div class="loading-state">
-      <div class="spinner-border" role="status"></div>
-    </div>
+    <app-loading-spinner message="Loading reviews..."></app-loading-spinner>
   } @else {
     <div class="table-wrapper">
       <table class="data-table">
@@ -30,9 +27,10 @@
             <tr>
               <td>
                 <div class="reviewer-cell">
-                  <div class="user-avatar-sm">
-                    {{ review.reviewer?.fullname?.charAt(0)?.toUpperCase() || '?' }}
-                  </div>
+                  <app-user-avatar
+                    [name]="review.reviewer?.fullname || 'Unknown'"
+                    [size]="24"
+                  ></app-user-avatar>
                   <span>{{ review.reviewer?.fullname || 'Unknown' }}</span>
                 </div>
               </td>
@@ -56,43 +54,25 @@
             </tr>
           } @empty {
             <tr>
-              <td colspan="6" class="empty-state">No reviews found</td>
+              <td colspan="6">
+                <app-empty-state
+                  title="No reviews found"
+                  message="There are no reviews matching your search criteria."
+                ></app-empty-state>
+              </td>
             </tr>
           }
         </tbody>
       </table>
     </div>
 
-    @if (totalPages() > 1) {
-      <div class="pagination">
-        <button
-          class="btn btn-sm btn-outline-primary"
-          [disabled]="page() <= 1"
-          (click)="changePage(page() - 1)"
-        >
-          ← Previous
-        </button>
-        @for (p of getPages(); track p) {
-          <button
-            class="btn btn-sm"
-            [class.btn-primary]="p === page()"
-            [class.btn-outline-primary]="p !== page()"
-            (click)="changePage(p)"
-          >
-            {{ p }}
-          </button>
-        }
-        <button
-          class="btn btn-sm btn-outline-primary"
-          [disabled]="page() >= totalPages()"
-          (click)="changePage(page() + 1)"
-        >
-          Next →
-        </button>
-      </div>
-    }
+    <app-pagination
+      [currentPage]="page()"
+      [totalItems]="total()"
+      [pageSize]="limit"
+      (pageChange)="changePage($event)"
+    ></app-pagination>
   }
-
   @if (showDeleteConfirm()) {
     <div class="modal-overlay" (click)="cancelDelete()">
       <div class="modal-content modal-sm" (click)="$event.stopPropagation()">

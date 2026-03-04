@@ -1,6 +1,6 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
-import { RouterLink } from '@angular/router';
 import { DatePipe } from '@angular/common';
+import { Component, inject, type OnInit, signal } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { ContractService } from '../../../services/contract.service';
 import type { Contract, ContractStatus } from '../../../types/contract.types';
 

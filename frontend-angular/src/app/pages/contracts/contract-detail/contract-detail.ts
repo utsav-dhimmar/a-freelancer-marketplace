@@ -1,10 +1,9 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
 import { DatePipe } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
-import { ContractService } from '../../../services/contract.service';
+import { Component, inject, type OnInit, signal } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
+import { ContractService } from '../../../services/contract.service';
 import type { Contract } from '../../../types/contract.types';
 
 @Component({

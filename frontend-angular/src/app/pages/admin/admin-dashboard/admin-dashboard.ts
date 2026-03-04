@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, type OnInit, signal } from '@angular/core';
 import { AdminService } from '../../../services';
 import type { DashboardStats } from '../../../types/admin.types';
 

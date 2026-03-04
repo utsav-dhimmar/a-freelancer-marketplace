@@ -1,115 +1,250 @@
-<div class="container mt-4">
+<div class="container py-5">
+  <nav aria-label="breadcrumb" class="mb-4">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item">
+        <a routerLink="/jobs" class="text-decoration-none text-warning">Jobs</a>
+      </li>
+      <li class="breadcrumb-item active" aria-current="page">Job Details</li>
+    </ol>
+  </nav>
+
   @if (loading()) {
-    <div class="text-center py-5">
-      <div class="spinner-border" role="status"></div>
+    <div class="d-flex justify-content-center py-5">
+      <div class="spinner-border text-warning" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
     </div>
   } @else if (job()) {
-    <div class="card">
-      <div class="card-body">
-        <div class="d-flex justify-content-between align-items-start mb-3">
-          <h2>{{ job()!.title }}</h2>
-          <span class="badge bg-info">{{ job()!.status }}</span>
+    <div class="row g-4">
+      <div class="col-lg-8">
+        <div class="card shadow-sm border-0 mb-4">
+          <div class="card-body p-4 p-md-5">
+            <div
+              class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3"
+            >
+              <h1 class="h2 fw-bold mb-0">{{ job()!.title }}</h1>
+              <div class="d-flex align-items-center">
+                <app-status-badge [status]="job()!.status" type="job"></app-status-badge>
+              </div>
+            </div>
+
+            <div class="d-flex flex-wrap gap-4 mb-5 pb-4 border-bottom">
+              <div class="d-flex align-items-center">
+                <div class="bg-success bg-opacity-10 text-success rounded-circle p-2 me-3">
+                  <i class="bi bi-currency-dollar fs-4"></i>
+                </div>
+                <div>
+                  <div class="small text-muted text-uppercase fw-bold">Budget</div>
+                  <div class="fw-bold fs-5">\${{ job()!.budget }} ({{ job()!.budgetType }})</div>
+                </div>
+              </div>
+
+              <div class="d-flex align-items-center">
+                <div class="bg-primary bg-opacity-10 text-primary rounded-circle p-2 me-3">
+                  <i class="bi bi-bar-chart fs-4"></i>
+                </div>
+                <div>
+                  <div class="small text-muted text-uppercase fw-bold">Difficulty</div>
+                  <div class="fw-bold fs-5">{{ job()!.difficulty | titlecase }}</div>
+                </div>
+              </div>
+
+              <div class="d-flex align-items-center">
+                <div class="bg-info bg-opacity-10 text-info rounded-circle p-2 me-3">
+                  <i class="bi bi-calendar-event fs-4"></i>
+                </div>
+                <div>
+                  <div class="small text-muted text-uppercase fw-bold">Posted</div>
+                  <div class="fw-bold fs-5">{{ job()!.createdAt | date: 'mediumDate' }}</div>
+                </div>
+              </div>
+            </div>
+
+            <h4 class="fw-bold mb-3">Description</h4>
+            <div
+              class="job-description-text mb-5"
+              style="white-space: pre-line; line-height: 1.8; color: #444"
+            >
+              {{ job()!.description }}
+            </div>
+
+            <h4 class="fw-bold mb-3">Required Skills</h4>
+            <div class="d-flex flex-wrap gap-2 mb-4">
+              @for (skill of job()!.skillsRequired; track skill) {
+                <span class="skill-tag px-3 py-2 fs-6">{{ skill }}</span>
+              }
+            </div>
+          </div>
         </div>
 
-        <div class="mb-3">
-          <span class="badge bg-success fs-6">\${{ job()!.budget }} {{ job()!.budgetType }}</span>
-          <span class="badge bg-secondary ms-2">{{ job()!.difficulty }}</span>
-        </div>
-
-        <h5>Description</h5>
-        <p>{{ job()!.description }}</p>
-
-        <h5>Required Skills</h5>
-        <div class="mb-3">
-          @for (skill of job()!.skillsRequired; track skill) {
-            <span class="badge bg-secondary me-1">{{ skill }}</span>
-          }
-        </div>
-
-        <div class="text-muted small mb-4">Posted: {{ job()!.createdAt | date: 'medium' }}</div>
-
-        @if (isFreelancer() && job()!.status === 'open') {
-          <button class="btn btn-primary" (click)="showProposalForm = true">Submit Proposal</button>
+        @if (isFreelancer() && job()!.status === 'open' && !showProposalForm) {
+          <div class="card border-warning border-opacity-25 bg-warning bg-opacity-10 mb-4">
+            <div class="card-body p-4 text-center">
+              <h4 class="fw-bold mb-3">Ready to work on this project?</h4>
+              <p class="text-muted mb-4">
+                Submit a professional proposal to get the client's attention.
+              </p>
+              <button class="btn btn-warning px-5 py-2 fw-bold" (click)="showProposalForm = true">
+                Submit Proposal
+              </button>
+            </div>
+          </div>
         }
 
         @if (showProposalForm) {
-          <div class="card mt-3">
-            <div class="card-body">
-              <h5>Submit Proposal</h5>
+          <div class="card shadow-sm border-0 mb-4" id="proposal-form">
+            <div class="card-header bg-white border-0 pt-4 px-4">
+              <h4 class="fw-bold mb-0">Submit Your Proposal</h4>
+            </div>
+            <div class="card-body p-4">
               <form [formGroup]="proposalForm" (ngSubmit)="submitProposal()">
-                <div class="mb-3">
-                  <label class="form-label">Cover Letter</label>
+                <div class="mb-4">
+                  <label class="form-label text-uppercase fw-bold small">Cover Letter</label>
                   <textarea
-                    class="form-control"
+                    class="form-control bg-light"
                     [class.is-invalid]="isFieldInvalid('coverLetter')"
                     formControlName="coverLetter"
-                    rows="4"
-                    placeholder="Describe why you're a good fit for this job..."
+                    rows="6"
+                    placeholder="Describe why you're a good fit for this job and how you plan to approach it..."
                   ></textarea>
-                  <div class="invalid-feedback">
-                    @if (proposalForm.get('coverLetter')?.errors?.['required']) {
-                      Cover letter is required.
-                    } @else if (proposalForm.get('coverLetter')?.errors?.['minlength']) {
-                      Cover letter must be at least 50 characters long.
+                  @if (isFieldInvalid('coverLetter')) {
+                    <div class="invalid-feedback">
+                      @if (proposalForm.get('coverLetter')?.errors?.['required']) {
+                        Cover letter is required.
+                      } @else if (proposalForm.get('coverLetter')?.errors?.['minlength']) {
+                        Please provide more detail (at least 50 characters).
+                      }
+                    </div>
+                  }
+                </div>
+
+                <div class="row mb-4">
+                  <div class="col-md-6 mb-3 mb-md-0">
+                    <label class="form-label text-uppercase fw-bold small">Bid Amount ($)</label>
+                    <div class="input-group">
+                      <span class="input-group-text bg-light border-end-0">$</span>
+                      <input
+                        type="number"
+                        class="form-control bg-light border-start-0"
+                        [class.is-invalid]="isFieldInvalid('bidAmount')"
+                        formControlName="bidAmount"
+                        placeholder="0.00"
+                      />
+                    </div>
+                    @if (isFieldInvalid('bidAmount')) {
+                      <div class="invalid-feedback d-block">
+                        @if (proposalForm.get('bidAmount')?.errors?.['required']) {
+                          Bid amount is required.
+                        } @else if (proposalForm.get('bidAmount')?.errors?.['min']) {
+                          Minimum bid is $1.
+                        }
+                      </div>
+                    }
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label text-uppercase fw-bold small"
+                      >Estimated Duration</label
+                    >
+                    <div class="input-group">
+                      <span class="input-group-text bg-light border-end-0">
+                        <i class="bi bi-clock"></i>
+                      </span>
+                      <input
+                        type="text"
+                        class="form-control bg-light border-start-0"
+                        [class.is-invalid]="isFieldInvalid('estimatedTime')"
+                        formControlName="estimatedTime"
+                        placeholder="e.g. 5 days, 2 weeks"
+                      />
+                    </div>
+                    @if (isFieldInvalid('estimatedTime')) {
+                      <div class="invalid-feedback d-block">Estimated time is required.</div>
                     }
                   </div>
                 </div>
-                <div class="mb-3">
-                  <label class="form-label">Bid Amount ($)</label>
-                  <input
-                    type="number"
-                    class="form-control"
-                    [class.is-invalid]="isFieldInvalid('bidAmount')"
-                    formControlName="bidAmount"
-                  />
-                  <div class="invalid-feedback">
-                    @if (proposalForm.get('bidAmount')?.errors?.['required']) {
-                      Bid amount is required.
-                    } @else if (proposalForm.get('bidAmount')?.errors?.['min']) {
-                      Bid amount must be at least $1.
+
+                <div class="d-flex gap-3 mt-4">
+                  <button
+                    type="submit"
+                    class="btn btn-warning px-4 py-2 fw-bold"
+                    [disabled]="submittingProposal()"
+                  >
+                    @if (submittingProposal()) {
+                      <span class="spinner-border spinner-border-sm me-2"></span>Submitting...
+                    } @else {
+                      Submit Proposal
                     }
-                  </div>
+                  </button>
+                  <button
+                    type="button"
+                    class="btn btn-light px-4 py-2"
+                    (click)="showProposalForm = false"
+                  >
+                    Cancel
+                  </button>
                 </div>
-                <div class="mb-3">
-                  <label class="form-label">Estimated Time</label>
-                  <input
-                    type="text"
-                    class="form-control"
-                    [class.is-invalid]="isFieldInvalid('estimatedTime')"
-                    formControlName="estimatedTime"
-                    placeholder="e.g., 2 weeks"
-                  />
-                  <div class="invalid-feedback">Estimated time is required.</div>
-                </div>
-                <button
-                  type="submit"
-                  class="btn btn-success me-2"
-                  [disabled]="submittingProposal()"
-                >
-                  {{ submittingProposal() ? 'Submitting...' : 'Submit' }}
-                </button>
-                <button type="button" class="btn btn-secondary" (click)="showProposalForm = false">
-                  Cancel
-                </button>
               </form>
             </div>
           </div>
         }
       </div>
-    </div>
 
-    @if (isClient() && isOwner()) {
-      <div class="card mt-4">
-        <div class="card-body">
-          <h5>Proposals</h5>
-          <a [routerLink]="['/jobs', job()!._id, 'proposals']" class="btn btn-outline-primary"
-            >Show Proposals</a
-          >
+      <div class="col-lg-4">
+        <div class="card shadow-sm border-0 mb-4 sticky-top" style="top: 2rem; z-index: 100">
+          <div class="card-body p-4">
+            <h5 class="fw-bold mb-4">About the Client</h5>
+            <div class="d-flex align-items-center mb-4">
+              <div class="bg-light rounded-circle p-3 me-3">
+                <i class="bi bi-person-badge fs-2 text-muted"></i>
+              </div>
+              <div>
+                <div class="fw-bold">Client ID: {{ job()!.client._id | slice: -8 }}</div>
+                <div class="small text-muted text-uppercase fw-bold">Verified Client</div>
+              </div>
+            </div>
+
+            <div class="border-top pt-4 mb-4">
+              <div class="d-flex justify-content-between mb-2">
+                <span class="text-muted">Job Status</span>
+                <span class="fw-bold text-uppercase small">{{ job()!.status }}</span>
+              </div>
+              <div class="d-flex justify-content-between">
+                <span class="text-muted">Proposals</span>
+                <span class="fw-bold">10-15</span>
+              </div>
+            </div>
+
+            @if (isClient() && isOwner()) {
+              <div class="d-grid gap-2">
+                <a
+                  [routerLink]="['/jobs', job()!._id, 'proposals']"
+                  class="btn btn-primary py-2 fw-bold"
+                >
+                  View Proposals
+                </a>
+                <button class="btn btn-outline-secondary py-2">Edit Job Post</button>
+              </div>
+            } @else {
+              <div class="d-grid gap-2">
+                <button class="btn btn-outline-warning py-2 fw-bold">
+                  <i class="bi bi-heart me-2"></i>Save for Later
+                </button>
+                <button class="btn btn-outline-secondary py-2">
+                  <i class="bi bi-flag me-2"></i>Report Job
+                </button>
+              </div>
+            }
+          </div>
         </div>
       </div>
-    }
+    </div>
   } @else {
-    <div class="alert alert-danger">Job not found</div>
+    <app-empty-state
+      icon="bi-exclamation-octagon"
+      title="Job Not Found"
+      message="The opportunity you're looking for might have been closed or removed."
+    >
+      <a routerLink="/jobs" class="btn btn-warning fw-bold px-4 mt-2">Back to Listings</a>
+    </app-empty-state>
   }
-  <a routerLink="/jobs" class="btn btn-link mt-3">Back to Jobs</a>
 </div>

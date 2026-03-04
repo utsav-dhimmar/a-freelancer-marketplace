@@ -13,10 +13,10 @@ export class AdminLayoutComponent {
   private adminService = inject(AdminService);
   private router = inject(Router);
 
-  sidebarCollapsed = signal(false);
+  mobileMenuOpen = signal(false);
 
-  toggleSidebar(): void {
-    this.sidebarCollapsed.set(!this.sidebarCollapsed());
+  toggleMobileMenu(): void {
+    this.mobileMenuOpen.set(!this.mobileMenuOpen());
   }
 
   logout(): void {

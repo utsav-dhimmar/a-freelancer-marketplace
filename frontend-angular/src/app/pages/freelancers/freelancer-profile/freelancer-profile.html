@@ -1,84 +1,156 @@
-<div class="container mt-4">
+<div class="container py-5">
+  <nav aria-label="breadcrumb" class="mb-5">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item">
+        <a routerLink="/freelancers" class="text-decoration-none text-warning">Talent</a>
+      </li>
+      <li class="breadcrumb-item active" aria-current="page">Freelancer Profile</li>
+    </ol>
+  </nav>
+
   @if (loading()) {
-    <div class="text-center py-5">
-      <div class="spinner-border" role="status"></div>
+    <div class="d-flex justify-content-center py-5">
+      <div class="spinner-border text-warning" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
     </div>
   } @else if (freelancer()) {
-    <div class="row">
-      <div class="col-md-4">
-        <div class="card">
-          <div class="card-body text-center">
-            <img
-              [src]="getProfilePicture()"
-              class="rounded-circle mb-3"
-              width="150"
-              height="150"
-              alt="Profile"
-            />
-            <h4>{{ getFreelancerName() }}</h4>
-            <p class="text-muted">{{ freelancer()!.title }}</p>
-            <p class="fw-bold text-success fs-5">\${{ freelancer()!.hourlyRate }}/hr</p>
-            <div class="mb-2">
-              @for (skill of freelancer()!.skills; track skill) {
-                <span class="badge bg-secondary me-1 mb-1">{{ skill }}</span>
-              }
+    <div class="row g-4">
+      <!-- Profile Sidebar -->
+      <div class="col-lg-4">
+        <div class="card shadow-sm border-0 mb-4 overflow-hidden">
+          <div class="bg-primary py-5 px-4 text-center">
+            <div class="position-relative d-inline-block">
+              <img
+                [src]="getProfilePicture()"
+                class="rounded-circle border border-4 border-white shadow-lg mb-3"
+                style="width: 160px; height: 160px; object-fit: cover"
+                [alt]="getFreelancerName()"
+              />
+            </div>
+            <h2 class="h4 fw-bold text-white mb-1">{{ getFreelancerName() }}</h2>
+            <p class="text-white-50 mb-0">{{ freelancer()!.title }}</p>
+          </div>
+          <div class="card-body p-4">
+            <div class="text-center mb-4">
+              <div class="h3 fw-bold text-dark mb-1">
+                ${{ freelancer()!.hourlyRate }}<span class="small text-muted fw-normal">/hr</span>
+              </div>
+              <div class="d-flex justify-content-center align-items-center gap-1 text-warning">
+                <i class="bi bi-star-fill"></i>
+                <i class="bi bi-star-fill"></i>
+                <i class="bi bi-star-fill"></i>
+                <i class="bi bi-star-fill"></i>
+                <i class="bi bi-star-half"></i>
+                <span class="text-muted small ms-1">({{ freelancer()!.rating.toFixed(1) }})</span>
+              </div>
+            </div>
+
+            <div class="border-top pt-4">
+              <h6 class="fw-bold text-uppercase small text-muted mb-3">Core Skills</h6>
+              <div class="d-flex flex-wrap gap-2">
+                @for (skill of freelancer()!.skills; track skill) {
+                  <span class="skill-tag px-3 py-1">{{ skill }}</span>
+                }
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      <div class="col-md-8">
-        <div class="card">
-          <div class="card-body">
-            <h5>About</h5>
-            <p>{{ freelancer()!.bio }}</p>
 
-            <h5 class="mt-4">Portfolio</h5>
+        <div class="card shadow-sm border-0 p-4">
+          <h5 class="fw-bold mb-4">Quick Stats</h5>
+          <div class="d-flex justify-content-between mb-3 pb-3 border-bottom">
+            <span class="text-muted"
+              ><i class="bi bi-check2-circle me-2 text-success"></i>Jobs Done</span
+            >
+            <span class="fw-bold">{{ freelancer()!.totalJobs }}</span>
+          </div>
+          <div class="d-flex justify-content-between mb-3 pb-3 border-bottom">
+            <span class="text-muted"
+              ><i class="bi bi-chat-left-text me-2 text-info"></i>Reviews</span
+            >
+            <span class="fw-bold">{{ freelancer()!.reviewCount }}</span>
+          </div>
+          <div class="d-flex justify-content-between">
+            <span class="text-muted"
+              ><i class="bi bi-clock me-2 text-primary"></i>Member Since</span
+            >
+            <span class="fw-bold">{{ freelancer()!.createdAt | date: 'yyyy' }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Content Area -->
+      <div class="col-lg-8">
+        <div class="card shadow-sm border-0 mb-4">
+          <div class="card-body p-4 p-md-5">
+            <h3 class="fw-bold mb-4 pb-2 border-bottom">About Me</h3>
+            <p class="text-muted" style="line-height: 1.8; white-space: pre-line">
+              {{ freelancer()!.bio || 'No bio provided.' }}
+            </p>
+          </div>
+        </div>
+
+        <div class="card shadow-sm border-0 mb-4">
+          <div class="card-body p-4 p-md-5">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+              <h3 class="fw-bold mb-0">Portfolio</h3>
+              <span class="badge bg-light text-dark fw-bold px-3 py-2"
+                >{{ freelancer()!.portfolio.length }} Items</span
+              >
+            </div>
+
             @if (freelancer()!.portfolio.length > 0) {
-              <div class="row">
+              <div class="row g-4">
                 @for (item of freelancer()!.portfolio; track item.link) {
-                  <div class="col-md-6 mb-3">
-                    <div class="card">
-                      <div class="card-body">
-                        <h6>{{ item.title }}</h6>
-                        <p class="small">{{ item.desc }}</p>
-                        <a [href]="item.link" target="_blank" class="btn btn-sm btn-outline-primary"
-                          >View Project</a
+                  <div class="col-md-6">
+                    <div class="card h-100 border bg-light bg-opacity-50">
+                      <div class="card-body p-4">
+                        <div class="d-flex align-items-start mb-3">
+                          <div class="bg-primary bg-opacity-10 text-primary rounded p-2 me-3">
+                            <i class="bi bi-folder2-open fs-4"></i>
+                          </div>
+                          <h5 class="fw-bold mb-0 mt-1">{{ item.title }}</h5>
+                        </div>
+                        <p class="text-muted small mb-4">{{ item.desc }}</p>
+                        <a
+                          [href]="item.link"
+                          target="_blank"
+                          class="btn btn-sm btn-outline-warning fw-bold px-3"
                         >
+                          View Case Study <i class="bi bi-box-arrow-up-right ms-1"></i>
+                        </a>
                       </div>
                     </div>
                   </div>
                 }
               </div>
             } @else {
-              <p class="text-muted">No portfolio items</p>
+              <div class="text-center py-5 bg-light rounded">
+                <i class="bi bi-card-image fs-1 text-muted mb-3 d-block"></i>
+                <p class="text-muted mb-0">No portfolio items added yet.</p>
+              </div>
             }
+          </div>
+        </div>
 
-            <div class="row mt-4">
-              <div class="col-md-4">
-                <div class="text-center">
-                  <p class="fs-4 fw-bold">{{ freelancer()!.rating.toFixed(1) }}</p>
-                  <p class="text-muted">Rating</p>
-                </div>
-              </div>
-              <div class="col-md-4">
-                <div class="text-center">
-                  <p class="fs-4 fw-bold">{{ freelancer()!.reviewCount }}</p>
-                  <p class="text-muted">Reviews</p>
-                </div>
-              </div>
-              <div class="col-md-4">
-                <div class="text-center">
-                  <p class="fs-4 fw-bold">{{ freelancer()!.totalJobs }}</p>
-                  <p class="text-muted">Jobs Completed</p>
-                </div>
-              </div>
+        <div class="card shadow-sm border-0">
+          <div class="card-body p-4 p-md-5">
+            <h3 class="fw-bold mb-4 pb-2 border-bottom">Recent Reviews</h3>
+            <div class="alert alert-light border-0 py-4 text-center">
+              <i class="bi bi-star text-muted me-2"></i> No reviews yet.
             </div>
           </div>
         </div>
       </div>
     </div>
   } @else {
-    <div class="alert alert-danger">Freelancer not found</div>
+    <app-empty-state
+      icon="bi-person-x"
+      title="Freelancer Not Found"
+      message="The profile you are looking for might have been moved or deactivated."
+    >
+      <a routerLink="/freelancers" class="btn btn-warning fw-bold px-4">Back to Directory</a>
+    </app-empty-state>
   }
-  <a routerLink="/freelancers" class="btn btn-link mt-3">Back to Freelancers</a>
 </div>

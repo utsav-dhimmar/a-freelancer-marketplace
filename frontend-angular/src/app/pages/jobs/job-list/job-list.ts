@@ -1,14 +1,26 @@
 import { SlicePipe } from '@angular/common';
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, type OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import {
+  EmptyStateComponent,
+  LoadingSpinnerComponent,
+  StatusBadgeComponent,
+} from '../../../components/ui';
 import { AuthService, JobService } from '../../../services';
 import type { Job, JobSearchParams } from '../../../types/job.types';
 
 @Component({
   selector: 'app-job-list',
   standalone: true,
-  imports: [RouterLink, SlicePipe, FormsModule],
+  imports: [
+    RouterLink,
+    SlicePipe,
+    FormsModule,
+    LoadingSpinnerComponent,
+    EmptyStateComponent,
+    StatusBadgeComponent,
+  ],
   templateUrl: './job-list.html',
   styleUrl: './job-list.css',
 })
@@ -72,14 +84,5 @@ export class JobListComponent implements OnInit {
 
   isClient(): boolean {
     return this.authService.isClient();
-  }
-
-  getStatusClass(status: string): string {
-    const classes: Record<string, string> = {
-      open: 'bg-success',
-      in_progress: 'bg-info',
-      completed: 'bg-secondary',
-    };
-    return classes[status] || 'bg-secondary';
   }
 }

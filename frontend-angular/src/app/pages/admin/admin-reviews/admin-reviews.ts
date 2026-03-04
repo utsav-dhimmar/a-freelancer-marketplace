@@ -1,12 +1,24 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
+import { Component, inject, type OnInit, signal } from '@angular/core';
+import {
+  EmptyStateComponent,
+  LoadingSpinnerComponent,
+  PaginationComponent,
+  UserAvatarComponent,
+} from '../../../components';
 import { AdminService } from '../../../services';
 import type { AdminReview } from '../../../types/admin.types';
 
 @Component({
   selector: 'app-admin-reviews',
   standalone: true,
-  imports: [DatePipe],
+  imports: [
+    DatePipe,
+    LoadingSpinnerComponent,
+    EmptyStateComponent,
+    PaginationComponent,
+    UserAvatarComponent,
+  ],
   templateUrl: './admin-reviews.html',
   styleUrl: './admin-reviews.css',
 })
@@ -46,7 +58,6 @@ export class AdminReviewsComponent implements OnInit {
   }
 
   changePage(newPage: number): void {
-    if (newPage < 1 || newPage > this.totalPages()) return;
     this.page.set(newPage);
     this.loadReviews();
   }
@@ -81,15 +92,5 @@ export class AdminReviewsComponent implements OnInit {
 
   getStars(rating: number): number[] {
     return Array.from({ length: 5 }, (_, i) => (i < rating ? 1 : 0));
-  }
-
-  getPages(): number[] {
-    const pages: number[] = [];
-    const total = this.totalPages();
-    const current = this.page();
-    const start = Math.max(1, current - 2);
-    const end = Math.min(total, current + 2);
-    for (let i = start; i <= end; i++) pages.push(i);
-    return pages;
   }
 }

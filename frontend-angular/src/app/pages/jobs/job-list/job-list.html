@@ -3,7 +3,6 @@
     <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
       <div>
         <h1 class="page-title">Browse Opportunities</h1>
-        <p class="page-subtitle">Find your next project from hundreds of jobs</p>
       </div>
       @if (isClient()) {
         <a routerLink="/jobs/create" class="btn btn-primary">
@@ -77,22 +76,24 @@
   </div>
 
   @if (loading()) {
-    <div class="text-center py-5">
-      <div class="spinner-border" role="status"></div>
-    </div>
+    <app-loading-spinner message="Loading jobs..."></app-loading-spinner>
   } @else if (jobs().length === 0) {
-    <div class="alert alert-info">
-      <i class="bi bi-info-circle me-2"></i>No jobs found matching your criteria
-    </div>
+    <app-empty-state
+      icon="bi-search"
+      title="No jobs found"
+      message="We couldn't find any jobs matching your current search criteria. Try adjusting your filters."
+    >
+      <button class="btn btn-outline-primary" (click)="searchTerm.set(''); search()">
+        Clear Search
+      </button>
+    </app-empty-state>
   } @else {
     <div class="row g-4">
       @for (job of jobs(); track job._id; let i = $index) {
         <div class="col-md-6 fade-in" [class]="'stagger-' + ((i % 5) + 1)">
           <div class="job-card">
             <div class="d-flex justify-content-between align-items-start mb-3">
-              <span class="job-status" [class]="getStatusClass(job.status)">
-                {{ job.status }}
-              </span>
+              <app-status-badge [status]="job.status" type="job"></app-status-badge>
               <span class="job-budget">\${{ job.budget }}</span>
             </div>
             <h5 class="job-title">{{ job.title }}</h5>

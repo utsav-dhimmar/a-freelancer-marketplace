@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, type OnInit, signal } from '@angular/core';
 import { ProposalService } from '../../../services';
 import type { Proposal } from '../../../types/proposal.types';
 

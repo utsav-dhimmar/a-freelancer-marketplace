@@ -1,10 +1,8 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, signal } from '@angular/core';
 import { Router } from '@angular/router';
-import { map, Observable, tap } from 'rxjs';
+import { map, type Observable, tap } from 'rxjs';
 import { API_BASE_URL, API_ENDPOINTS } from '../constants/api';
-import type { ApiResponse } from '../types/api.types';
-import type { AuthResponse, User } from '../types/auth.types';
 import type {
   AdminContractsResponse,
   AdminJobsResponse,
@@ -12,6 +10,8 @@ import type {
   AdminUsersResponse,
   DashboardStats,
 } from '../types/admin.types';
+import type { ApiResponse } from '../types/api.types';
+import type { AuthResponse, User } from '../types/auth.types';
 
 @Injectable({
   providedIn: 'root',
@@ -94,7 +94,12 @@ export class AdminService {
 
   updateUser(
     id: string,
-    data: { role?: string; fullname?: string; email?: string; username?: string },
+    data: {
+      role?: string;
+      fullname?: string;
+      email?: string;
+      username?: string;
+    },
   ): Observable<User> {
     return this.http
       .put<ApiResponse<{ user: User }>>(`${API_BASE_URL}${API_ENDPOINTS.ADMIN.USER_ID(id)}`, data)
@@ -143,9 +148,9 @@ export class AdminService {
     if (status) params = params.set('status', status);
 
     return this.http
-      .get<
-        ApiResponse<AdminContractsResponse>
-      >(`${API_BASE_URL}${API_ENDPOINTS.ADMIN.CONTRACTS}`, { params })
+      .get<ApiResponse<AdminContractsResponse>>(`${API_BASE_URL}${API_ENDPOINTS.ADMIN.CONTRACTS}`, {
+        params,
+      })
       .pipe(map((response) => response.data));
   }
 

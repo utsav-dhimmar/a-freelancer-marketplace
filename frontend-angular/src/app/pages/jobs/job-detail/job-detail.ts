@@ -1,15 +1,25 @@
-import { DatePipe } from '@angular/common';
-import { Component, inject, OnInit, signal } from '@angular/core';
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { DatePipe, TitleCasePipe, SlicePipe } from '@angular/common';
+import { Component, inject, type OnInit, signal } from '@angular/core';
+import { FormBuilder, type FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { AuthService, JobService, ProposalService } from '../../../services';
-import type { Job } from '../../../types/job.types';
 import type { User } from '../../../types/auth.types';
+import type { Job } from '../../../types/job.types';
+import { StatusBadgeComponent } from '../../../components/ui/status-badge/status-badge.component';
+import { EmptyStateComponent } from '../../../components/ui/empty-state/empty-state';
 
 @Component({
   selector: 'app-job-detail',
   standalone: true,
-  imports: [RouterLink, ReactiveFormsModule, DatePipe],
+  imports: [
+    RouterLink,
+    ReactiveFormsModule,
+    DatePipe,
+    TitleCasePipe,
+    SlicePipe,
+    StatusBadgeComponent,
+    EmptyStateComponent,
+  ],
   templateUrl: './job-detail.html',
   styleUrl: './job-detail.css',
 })

@@ -1,8 +1,8 @@
 import { Component, inject, signal } from '@angular/core';
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, type FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { JobService } from '../../../services';
-import type { CreateJobRequest, JobDifficulty, JobBudgetType } from '../../../types/job.types';
+import type { CreateJobRequest, JobBudgetType, JobDifficulty } from '../../../types/job.types';
 
 @Component({
   selector: 'app-job-create',

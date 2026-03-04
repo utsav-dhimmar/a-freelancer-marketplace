@@ -1,13 +1,15 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, type OnInit, signal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
+import { EmptyStateComponent } from '../../../components/ui/empty-state/empty-state';
+import { API_BASE_URL } from '../../../constants/api';
 import { FreelancerService } from '../../../services';
 import type { Freelancer } from '../../../types/freelancer.types';
-import { API_BASE_URL } from '../../../constants/api';
 
+import { DatePipe } from '@angular/common';
 @Component({
   selector: 'app-freelancer-profile',
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterLink, EmptyStateComponent, DatePipe],
   templateUrl: './freelancer-profile.html',
   styleUrl: './freelancer-profile.css',
 })

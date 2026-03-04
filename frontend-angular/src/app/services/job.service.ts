@@ -1,14 +1,14 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, signal } from '@angular/core';
-import { map, Observable, tap } from 'rxjs';
+import { map, type Observable, tap } from 'rxjs';
 import { API_BASE_URL, API_ENDPOINTS } from '../constants/api';
 import type { ApiResponse } from '../types/api.types';
 import type {
   CreateJobRequest,
   Job,
   JobSearchParams,
-  JobsResponse,
   JobStatus,
+  JobsResponse,
 } from '../types/job.types';
 
 @Injectable({
@@ -74,9 +74,9 @@ export class JobService {
 
   updateJobStatus(id: string, status: JobStatus): Observable<Job> {
     return this.http
-      .patch<
-        ApiResponse<{ job: Job }>
-      >(`${API_BASE_URL}${API_ENDPOINTS.JOBS.STATUS(id)}`, { status })
+      .patch<ApiResponse<{ job: Job }>>(`${API_BASE_URL}${API_ENDPOINTS.JOBS.STATUS(id)}`, {
+        status,
+      })
       .pipe(map((response: ApiResponse<{ job: Job }>) => response.data.job));
   }
 

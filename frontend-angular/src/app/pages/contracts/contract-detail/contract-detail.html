@@ -37,7 +37,6 @@
             </div>
           </div>
         }
-
         @if (isClient() && contract()!.status === 'submitted') {
           <div class="card mt-3">
             <div class="card-body">
@@ -48,7 +47,6 @@
             </div>
           </div>
         }
-
         @if (contract()!.status !== 'completed' && contract()!.status !== 'disputed') {
           <div class="card mt-3">
             <div class="card-body">

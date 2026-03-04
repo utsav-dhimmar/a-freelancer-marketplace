@@ -1,5 +1,5 @@
 import { Component, inject, signal } from '@angular/core';
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, type FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { FreelancerService } from '../../../services';
 import type { CreateFreelancerRequest } from '../../../types/freelancer.types';

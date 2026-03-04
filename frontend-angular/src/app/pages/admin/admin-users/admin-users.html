@@ -7,11 +7,8 @@
   @if (error()) {
     <div class="alert alert-danger">{{ error() }}</div>
   }
-
   @if (loading()) {
-    <div class="loading-state">
-      <div class="spinner-border" role="status"></div>
-    </div>
+    <app-loading-spinner message="Loading users..."></app-loading-spinner>
   } @else {
     <!-- Table -->
     <div class="table-wrapper">
@@ -30,9 +27,7 @@
             <tr>
               <td>
                 <div class="user-cell">
-                  <div class="user-avatar-sm">
-                    {{ user.fullname.charAt(0).toUpperCase() }}
-                  </div>
+                  <app-user-avatar [name]="user.fullname" [size]="32"></app-user-avatar>
                   <div>
                     <div class="user-name">{{ user.fullname }}</div>
                     <div class="user-username">&#64;{{ user.username }}</div>
@@ -41,9 +36,7 @@
               </td>
               <td>{{ user.email }}</td>
               <td>
-                <span class="role-badge" [class]="getRoleBadgeClass(user.role)">
-                  {{ user.role }}
-                </span>
+                <app-status-badge [status]="user.role" type="user"></app-status-badge>
               </td>
               <td>{{ user.createdAt | date: 'mediumDate' }}</td>
               <td>
@@ -59,7 +52,12 @@
             </tr>
           } @empty {
             <tr>
-              <td colspan="5" class="empty-state">No users found</td>
+              <td colspan="5">
+                <app-empty-state
+                  title="No users found"
+                  message="There are no registered users matching your criteria."
+                ></app-empty-state>
+              </td>
             </tr>
           }
         </tbody>
@@ -67,34 +65,12 @@
     </div>
 
     <!-- Pagination -->
-    @if (totalPages() > 1) {
-      <div class="pagination">
-        <button
-          class="btn btn-sm btn-outline-primary"
-          [disabled]="page() <= 1"
-          (click)="changePage(page() - 1)"
-        >
-          ← Previous
-        </button>
-        @for (p of getPages(); track p) {
-          <button
-            class="btn btn-sm"
-            [class.btn-primary]="p === page()"
-            [class.btn-outline-primary]="p !== page()"
-            (click)="changePage(p)"
-          >
-            {{ p }}
-          </button>
-        }
-        <button
-          class="btn btn-sm btn-outline-primary"
-          [disabled]="page() >= totalPages()"
-          (click)="changePage(page() + 1)"
-        >
-          Next →
-        </button>
-      </div>
-    }
+    <app-pagination
+      [currentPage]="page()"
+      [totalItems]="total()"
+      [pageSize]="limit"
+      (pageChange)="changePage($event)"
+    ></app-pagination>
   }
 
   <!-- Edit Modal -->

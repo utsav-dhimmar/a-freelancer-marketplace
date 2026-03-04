@@ -1,12 +1,28 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
+import { Component, inject, type OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import {
+  EmptyStateComponent,
+  LoadingSpinnerComponent,
+  PaginationComponent,
+  StatusBadgeComponent,
+  UserAvatarComponent,
+} from '../../../components';
 import { AdminService } from '../../../services';
 import type { User } from '../../../types/auth.types';
+
 @Component({
   selector: 'app-admin-users',
   standalone: true,
-  imports: [FormsModule, DatePipe],
+  imports: [
+    FormsModule,
+    DatePipe,
+    LoadingSpinnerComponent,
+    EmptyStateComponent,
+    StatusBadgeComponent,
+    PaginationComponent,
+    UserAvatarComponent,
+  ],
   templateUrl: './admin-users.html',
   styleUrl: './admin-users.css',
 })
@@ -60,7 +76,6 @@ export class AdminUsersComponent implements OnInit {
   }
 
   changePage(newPage: number): void {
-    if (newPage < 1 || newPage > this.totalPages()) return;
     this.page.set(newPage);
     this.loadUsers();
   }
@@ -125,30 +140,5 @@ export class AdminUsersComponent implements OnInit {
         this.deleting.set(false);
       },
     });
-  }
-
-  getRoleBadgeClass(role: string): string {
-    switch (role) {
-      case 'admin':
-        return 'badge-admin';
-      case 'client':
-        return 'badge-client';
-      case 'freelancer':
-        return 'badge-freelancer';
-      default:
-        return '';
-    }
-  }
-
-  getPages(): number[] {
-    const pages: number[] = [];
-    const total = this.totalPages();
-    const current = this.page();
-    const start = Math.max(1, current - 2);
-    const end = Math.min(total, current + 2);
-    for (let i = start; i <= end; i++) {
-      pages.push(i);
-    }
-    return pages;
   }
 }

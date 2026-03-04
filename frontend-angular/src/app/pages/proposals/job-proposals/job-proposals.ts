@@ -1,9 +1,9 @@
 import { DatePipe, SlicePipe } from '@angular/common';
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, type OnInit, signal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
+import { API_BASE_URL } from '../../../constants/api';
 import { ContractService, ProposalService } from '../../../services';
 import type { Proposal, ProposalStatus } from '../../../types/proposal.types';
-import { API_BASE_URL } from '../../../constants/api';
 
 @Component({
   selector: 'app-job-proposals',
