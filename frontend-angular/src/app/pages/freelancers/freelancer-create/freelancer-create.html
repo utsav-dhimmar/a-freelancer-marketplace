@@ -45,7 +45,7 @@
               </div>
             </div>
             <div class="mb-3">
-              <label class="form-label">Hourly Rate ($)</label>
+              <label class="form-label">Hourly Rate ({{ currency.SYMBOL }})</label>
               <input
                 type="number"
                 class="form-control"
@@ -56,7 +56,7 @@
                 @if (freelancerForm.get('hourlyRate')?.errors?.['required']) {
                   Hourly rate is required.
                 } @else if (freelancerForm.get('hourlyRate')?.errors?.['min']) {
-                  Hourly rate must be at least $1.
+                  Hourly rate must be at least {{ currency.SYMBOL }}1.
                 }
               </div>
             </div>

@@ -34,7 +34,7 @@
 
               <div class="d-flex justify-content-between align-items-center mt-3">
                 <div>
-                  <strong>Bid: \${{ proposal.bidAmount }}</strong>
+                  <strong>Bid: {{ currency.SYMBOL }}{{ proposal.bidAmount }}</strong>
                   <span class="ms-3 text-muted">ETA: {{ proposal.estimatedTime }}</span>
                 </div>
                 <span

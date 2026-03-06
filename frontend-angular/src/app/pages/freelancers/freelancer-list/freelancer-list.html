@@ -28,7 +28,7 @@
           <label class="form-label text-uppercase fw-bold small text-muted">Min Hourly Rate</label>
           <div class="input-group">
             <span class="input-group-text bg-light">
-              <i class="bi bi-currency-dollar text-muted"></i>
+              <i class="bi bi-currency-rupee text-muted"></i>
             </span>
             <input
               type="number"
@@ -43,7 +43,7 @@
           <label class="form-label text-uppercase fw-bold small text-muted">Max Hourly Rate</label>
           <div class="input-group">
             <span class="input-group-text bg-light">
-              <i class="bi bi-currency-dollar text-muted"></i>
+              <i class="bi bi-currency-rupee text-muted"></i>
             </span>
             <input
               type="number"
@@ -100,7 +100,8 @@
 
               <div class="mb-4">
                 <div class="h3 fw-bold mb-0 text-dark">
-                  ${{ freelancer.hourlyRate }}<span class="small text-muted fw-normal">/hr</span>
+                  {{ currency.SYMBOL }}{{ freelancer.hourlyRate
+                  }}<span class="small text-muted fw-normal">/hr</span>
                 </div>
               </div>
 

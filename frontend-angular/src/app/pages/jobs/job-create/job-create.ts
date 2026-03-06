@@ -1,6 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, type FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
+import { CURRENCY } from '../../../constants/currency';
 import { JobService } from '../../../services';
 import type { CreateJobRequest, JobBudgetType, JobDifficulty } from '../../../types/job.types';
 
@@ -18,6 +19,7 @@ export class JobCreateComponent {
 
   loading = signal<boolean>(false);
   error = signal<string>('');
+  currency = CURRENCY;
 
   jobForm: FormGroup = this.fb.group({
     title: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(100)]],

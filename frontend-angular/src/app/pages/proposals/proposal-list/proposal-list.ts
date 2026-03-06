@@ -2,6 +2,7 @@ import { DatePipe } from '@angular/common';
 import { Component, inject, type OnInit, signal } from '@angular/core';
 import { ProposalService } from '../../../services';
 import type { Proposal } from '../../../types/proposal.types';
+import { CURRENCY } from '../../../constants/currency';
 
 @Component({
   selector: 'app-proposal-list',
@@ -15,6 +16,7 @@ export class ProposalListComponent implements OnInit {
 
   proposals = signal<Proposal[]>([]);
   loading = signal<boolean>(true);
+  currency = CURRENCY;
 
   ngOnInit(): void {
     this.loadProposals();

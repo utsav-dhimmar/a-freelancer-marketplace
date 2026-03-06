@@ -7,6 +7,7 @@ import {
   PaginationComponent,
   StatusBadgeComponent,
 } from '../../../components';
+import { CURRENCY } from '../../../constants/currency';
 import { AdminService } from '../../../services';
 import type { AdminJob } from '../../../types/admin.types';
 
@@ -34,6 +35,7 @@ export class AdminJobsComponent implements OnInit {
   totalPages = signal(1);
   total = signal(0);
   limit = 10;
+  currency = CURRENCY;
 
   searchQuery = '';
   statusFilter = '';

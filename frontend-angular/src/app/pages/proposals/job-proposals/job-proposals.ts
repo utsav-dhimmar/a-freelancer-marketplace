@@ -2,6 +2,7 @@ import { DatePipe, SlicePipe } from '@angular/common';
 import { Component, inject, type OnInit, signal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { API_BASE_URL } from '../../../constants/api';
+import { CURRENCY } from '../../../constants/currency';
 import { ContractService, ProposalService } from '../../../services';
 import type { Proposal, ProposalStatus } from '../../../types/proposal.types';
 
@@ -19,6 +20,7 @@ export class JobProposalsComponent implements OnInit {
 
   proposals = signal<Proposal[]>([]);
   loading = signal<boolean>(true);
+  currency = CURRENCY;
 
   ngOnInit(): void {
     const jobId: string | null = this.route.snapshot.paramMap.get('id');

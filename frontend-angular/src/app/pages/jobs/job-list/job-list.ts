@@ -1,4 +1,5 @@
 import { SlicePipe } from '@angular/common';
+import { TimeAgoPipe } from '../../../pipes/time-ago.pipe';
 import { Component, inject, type OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
@@ -7,6 +8,7 @@ import {
   LoadingSpinnerComponent,
   StatusBadgeComponent,
 } from '../../../components/ui';
+import { CURRENCY } from '../../../constants/currency';
 import { AuthService, JobService } from '../../../services';
 import type { Job, JobSearchParams } from '../../../types/job.types';
 
@@ -20,6 +22,7 @@ import type { Job, JobSearchParams } from '../../../types/job.types';
     LoadingSpinnerComponent,
     EmptyStateComponent,
     StatusBadgeComponent,
+    TimeAgoPipe,
   ],
   templateUrl: './job-list.html',
   styleUrl: './job-list.css',
@@ -31,6 +34,7 @@ export class JobListComponent implements OnInit {
   jobs = signal<Job[]>([]);
   total = signal<number>(0);
   loading = signal<boolean>(true);
+  currency = CURRENCY;
 
   searchTerm = signal('');
   minBudget = signal<number | undefined>(undefined);

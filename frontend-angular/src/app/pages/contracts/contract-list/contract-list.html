@@ -42,7 +42,7 @@
                 <td class="fw-semibold">{{ getJobTitle(contract) }}</td>
                 <td>{{ getClientName(contract) }}</td>
                 <td>{{ getFreelancerName(contract) }}</td>
-                <td class="fw-semibold text-success">${{ contract.amount }}</td>
+                <td class="fw-semibold text-success">{{ currency.SYMBOL }}{{ contract.amount }}</td>
                 <td>
                   <span class="badge" [class]="getStatusClass(contract.status)">
                     {{ contract.status }}

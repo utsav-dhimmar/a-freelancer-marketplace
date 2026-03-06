@@ -1,6 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, type FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
+import { CURRENCY } from '../../../constants/currency';
 import { FreelancerService } from '../../../services';
 import type { CreateFreelancerRequest } from '../../../types/freelancer.types';
 
@@ -18,6 +19,7 @@ export class FreelancerCreateComponent {
 
   loading = signal<boolean>(false);
   error = signal<string>('');
+  currency = CURRENCY;
 
   freelancerForm: FormGroup = this.fb.group({
     title: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(100)]],

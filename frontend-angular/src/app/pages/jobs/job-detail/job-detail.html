@@ -31,11 +31,13 @@
             <div class="d-flex flex-wrap gap-4 mb-5 pb-4 border-bottom">
               <div class="d-flex align-items-center">
                 <div class="bg-success bg-opacity-10 text-success rounded-circle p-2 me-3">
-                  <i class="bi bi-currency-dollar fs-4"></i>
+                  <i class="bi bi-currency-rupee fs-4"></i>
                 </div>
                 <div>
                   <div class="small text-muted text-uppercase fw-bold">Budget</div>
-                  <div class="fw-bold fs-5">\${{ job()!.budget }} ({{ job()!.budgetType }})</div>
+                  <div class="fw-bold fs-5">
+                    {{ currency.SYMBOL }}{{ job()!.budget }} ({{ job()!.budgetType }})
+                  </div>
                 </div>
               </div>
 
@@ -90,7 +92,6 @@
             </div>
           </div>
         }
-
         @if (showProposalForm) {
           <div class="card shadow-sm border-0 mb-4" id="proposal-form">
             <div class="card-header bg-white border-0 pt-4 px-4">
@@ -120,9 +121,13 @@
 
                 <div class="row mb-4">
                   <div class="col-md-6 mb-3 mb-md-0">
-                    <label class="form-label text-uppercase fw-bold small">Bid Amount ($)</label>
+                    <label class="form-label text-uppercase fw-bold small"
+                      >Bid Amount ({{ currency.SYMBOL }})</label
+                    >
                     <div class="input-group">
-                      <span class="input-group-text bg-light border-end-0">$</span>
+                      <span class="input-group-text bg-light border-end-0">{{
+                        currency.SYMBOL
+                      }}</span>
                       <input
                         type="number"
                         class="form-control bg-light border-start-0"
@@ -136,7 +141,7 @@
                         @if (proposalForm.get('bidAmount')?.errors?.['required']) {
                           Bid amount is required.
                         } @else if (proposalForm.get('bidAmount')?.errors?.['min']) {
-                          Minimum bid is $1.
+                          Minimum bid is {{ currency.SYMBOL }}1.
                         }
                       </div>
                     }
@@ -187,55 +192,6 @@
             </div>
           </div>
         }
-      </div>
-
-      <div class="col-lg-4">
-        <div class="card shadow-sm border-0 mb-4 sticky-top" style="top: 2rem; z-index: 100">
-          <div class="card-body p-4">
-            <h5 class="fw-bold mb-4">About the Client</h5>
-            <div class="d-flex align-items-center mb-4">
-              <div class="bg-light rounded-circle p-3 me-3">
-                <i class="bi bi-person-badge fs-2 text-muted"></i>
-              </div>
-              <div>
-                <div class="fw-bold">Client ID: {{ job()!.client._id | slice: -8 }}</div>
-                <div class="small text-muted text-uppercase fw-bold">Verified Client</div>
-              </div>
-            </div>
-
-            <div class="border-top pt-4 mb-4">
-              <div class="d-flex justify-content-between mb-2">
-                <span class="text-muted">Job Status</span>
-                <span class="fw-bold text-uppercase small">{{ job()!.status }}</span>
-              </div>
-              <div class="d-flex justify-content-between">
-                <span class="text-muted">Proposals</span>
-                <span class="fw-bold">10-15</span>
-              </div>
-            </div>
-
-            @if (isClient() && isOwner()) {
-              <div class="d-grid gap-2">
-                <a
-                  [routerLink]="['/jobs', job()!._id, 'proposals']"
-                  class="btn btn-primary py-2 fw-bold"
-                >
-                  View Proposals
-                </a>
-                <button class="btn btn-outline-secondary py-2">Edit Job Post</button>
-              </div>
-            } @else {
-              <div class="d-grid gap-2">
-                <button class="btn btn-outline-warning py-2 fw-bold">
-                  <i class="bi bi-heart me-2"></i>Save for Later
-                </button>
-                <button class="btn btn-outline-secondary py-2">
-                  <i class="bi bi-flag me-2"></i>Report Job
-                </button>
-              </div>
-            }
-          </div>
-        </div>
       </div>
     </div>
   } @else {

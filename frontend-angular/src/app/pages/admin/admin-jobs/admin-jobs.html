@@ -53,7 +53,7 @@
                 <div class="job-title-cell">{{ job.title }}</div>
               </td>
               <td>{{ job.client?.fullname || 'N/A' }}</td>
-              <td class="budget-cell">${{ job.budget }}</td>
+              <td class="budget-cell">{{ currency.SYMBOL }}{{ job.budget }}</td>
               <td>
                 <app-status-badge [status]="job.status" type="job"></app-status-badge>
               </td>

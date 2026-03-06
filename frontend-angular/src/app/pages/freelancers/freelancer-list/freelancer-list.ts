@@ -8,6 +8,7 @@ import {
   UserAvatarComponent,
 } from '../../../components/ui';
 import { API_BASE_URL } from '../../../constants/api';
+import { CURRENCY } from '../../../constants/currency';
 import { FreelancerService } from '../../../services';
 import type { Freelancer, FreelancerSearchParams } from '../../../types/freelancer.types';
 
@@ -30,6 +31,7 @@ export class FreelancerListComponent implements OnInit {
 
   freelancers = signal<Freelancer[]>([]);
   loading = signal<boolean>(true);
+  currency = CURRENCY;
 
   skills: string = '';
   minRate?: number;

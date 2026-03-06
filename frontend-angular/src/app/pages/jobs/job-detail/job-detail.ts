@@ -7,6 +7,7 @@ import type { User } from '../../../types/auth.types';
 import type { Job } from '../../../types/job.types';
 import { StatusBadgeComponent } from '../../../components/ui/status-badge/status-badge.component';
 import { EmptyStateComponent } from '../../../components/ui/empty-state/empty-state';
+import { CURRENCY } from '../../../constants/currency';
 
 @Component({
   selector: 'app-job-detail',
@@ -29,6 +30,7 @@ export class JobDetailComponent implements OnInit {
   private proposalService: ProposalService = inject(ProposalService);
   private route: ActivatedRoute = inject(ActivatedRoute);
   authService: AuthService = inject(AuthService);
+  currency = CURRENCY;
 
   job = signal<Job | null>(null);
   loading = signal<boolean>(true);

@@ -1,6 +1,7 @@
 import { DatePipe } from '@angular/common';
 import { Component, inject, type OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { CURRENCY } from '../../../constants/currency';
 import { ContractService } from '../../../services/contract.service';
 import type { Contract, ContractStatus } from '../../../types/contract.types';
 
@@ -16,6 +17,7 @@ export class ContractListComponent implements OnInit {
 
   contracts = signal<Contract[]>([]);
   loading = signal<boolean>(true);
+  currency = CURRENCY;
 
   ngOnInit(): void {
     this.loadContracts();

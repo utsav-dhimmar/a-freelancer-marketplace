@@ -126,24 +126,40 @@
               }
             </div>
 
-            <div class="row">
-              <div class="col-md-6 mb-3">
-                <label class="form-label text-uppercase fw-bold small mb-2">I want to</label>
-                <select class="form-select bg-light" formControlName="role">
-                  <option value="client">Hire freelancers</option>
-                  <option value="freelancer">Find work</option>
-                </select>
+            <div class="mb-4">
+              <label class="form-label text-uppercase fw-bold small mb-3 d-block">I want to</label>
+              <div class="d-flex gap-4">
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    id="roleClient"
+                    [checked]="isClient()"
+                    (change)="toggleRole('client')"
+                  />
+                  <label class="form-check-label" for="roleClient"> Hire freelancers </label>
+                </div>
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    id="roleFreelancer"
+                    [checked]="isFreelancer()"
+                    (change)="toggleRole('freelancer')"
+                  />
+                  <label class="form-check-label" for="roleFreelancer"> Find work </label>
+                </div>
               </div>
+            </div>
 
-              <div class="col-md-6 mb-4">
-                <label class="form-label text-uppercase fw-bold small mb-2">Profile Picture</label>
-                <input
-                  type="file"
-                  class="form-control bg-light"
-                  (change)="onFileSelect($event)"
-                  accept="image/*"
-                />
-              </div>
+            <div class="mb-4">
+              <label class="form-label text-uppercase fw-bold small mb-2">Profile Picture</label>
+              <input
+                type="file"
+                class="form-control bg-light"
+                (change)="onFileSelect($event)"
+                accept="image/*"
+              />
             </div>
 
             <div class="mb-4 form-check">

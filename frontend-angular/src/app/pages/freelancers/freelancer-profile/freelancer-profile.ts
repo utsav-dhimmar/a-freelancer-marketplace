@@ -2,6 +2,7 @@ import { Component, inject, type OnInit, signal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { EmptyStateComponent } from '../../../components/ui/empty-state/empty-state';
 import { API_BASE_URL } from '../../../constants/api';
+import { CURRENCY } from '../../../constants/currency';
 import { FreelancerService } from '../../../services';
 import type { Freelancer } from '../../../types/freelancer.types';
 
@@ -19,6 +20,7 @@ export class FreelancerProfileComponent implements OnInit {
 
   freelancer = signal<Freelancer | null>(null);
   loading = signal<boolean>(true);
+  currency = CURRENCY;
 
   ngOnInit(): void {
     const id: string | null = this.route.snapshot.paramMap.get('id');

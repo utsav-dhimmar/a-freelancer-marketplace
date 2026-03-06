@@ -13,7 +13,7 @@
 
         <div class="row mb-4">
           <div class="col-md-6">
-            <p><strong>Amount:</strong> \${{ contract()!.amount }}</p>
+            <p><strong>Amount:</strong> {{ currency.SYMBOL }}{{ contract()!.amount }}</p>
             <p><strong>Start Date:</strong> {{ contract()!.startDate | date: 'medium' }}</p>
             @if (contract()!.endDate) {
               <p><strong>End Date:</strong> {{ contract()!.endDate | date: 'medium' }}</p>

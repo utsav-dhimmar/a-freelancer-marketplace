@@ -45,7 +45,7 @@
               </td>
               <td>{{ contract.client?.fullname || 'N/A' }}</td>
               <td>{{ contract.freelancer?.fullname || 'N/A' }}</td>
-              <td class="amount-cell">${{ contract.amount }}</td>
+              <td class="amount-cell">{{ currency.SYMBOL }}{{ contract.amount }}</td>
               <td>
                 <app-status-badge [status]="contract.status" type="contract"></app-status-badge>
               </td>

@@ -21,13 +21,30 @@ export class RegisterComponent {
     fullname: ['', [Validators.required, Validators.minLength(2)]],
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required, Validators.minLength(6)]],
-    role: ['client', Validators.required],
+    isClient: [true],
+    isFreelancer: [false],
     agreeToTerms: [false, Validators.requiredTrue],
   });
 
   profilePicture?: string;
   loading = signal(false);
   error = signal('');
+
+  isClient(): boolean {
+    return this.form.get('isClient')?.value ?? true;
+  }
+
+  isFreelancer(): boolean {
+    return this.form.get('isFreelancer')?.value ?? false;
+  }
+
+  toggleRole(role: 'client' | 'freelancer'): void {
+    if (role === 'client') {
+      this.form.patchValue({ isClient: !this.isClient() });
+    } else {
+      this.form.patchValue({ isFreelancer: !this.isFreelancer() });
+    }
+  }
 
   onFileSelect(event: Event): void {
     const input: HTMLInputElement = event.target as HTMLInputElement;
@@ -51,7 +68,11 @@ export class RegisterComponent {
     this.loading.set(true);
     this.error.set('');
     const registerData: RegisterRequest = {
-      ...this.form.value,
+      username: this.form.value.username,
+      fullname: this.form.value.fullname,
+      email: this.form.value.email,
+      password: this.form.value.password,
+      role: this.isFreelancer() ? 'freelancer' : 'client',
       profilePicture: this.profilePicture,
     };
     this.authService.register(registerData).subscribe({
