@@ -79,6 +79,24 @@
           </div>
         </div>
 
+        @if (isOwner()) {
+          <div class="card border-primary border-opacity-25 bg-primary bg-opacity-10 mb-4">
+            <div class="card-body p-4 text-center">
+              <i class="bi bi-people-fill text-primary fs-2 mb-2 d-block"></i>
+              <h4 class="fw-bold mb-3">Manage Proposals</h4>
+              <p class="text-muted mb-4">
+                Review, accept, or reject proposals from freelancers for this job.
+              </p>
+              <a
+                [routerLink]="'/jobs/' + job()!._id + '/proposals'"
+                class="btn btn-primary px-5 py-2 fw-bold"
+              >
+                <i class="bi bi-eye me-2"></i>View Proposals
+              </a>
+            </div>
+          </div>
+        }
+
         @if (
           isFreelancer() && job()!.status === 'open' && !showProposalForm && hasAlreadySubmitted()
         ) {
