@@ -34,6 +34,7 @@ export interface Contract {
   proposal: ContractProposal;
   amount: number;
   status: ContractStatus;
+  submittedWork?: string;
   startDate: string;
   endDate?: string;
   createdAt: string;

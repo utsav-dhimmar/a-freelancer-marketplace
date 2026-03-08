@@ -104,6 +104,30 @@ export class ContractService {
   }
 
   /**
+   * Submit work on a contract (freelancer)
+   */
+  async submitWork(
+    contractId: string,
+    submittedWork?: string,
+  ): Promise<IContract | null> {
+    const updateData: { status: string; submittedWork?: string } = {
+      status: 'submitted',
+    };
+    if (submittedWork) {
+      updateData.submittedWork = submittedWork;
+    }
+
+    return Contract.findByIdAndUpdate(contractId, updateData, {
+      new: true,
+    }).populate([
+      { path: 'job' },
+      { path: 'client', select: '-password -refreshToken' },
+      { path: 'freelancer', select: '-password -refreshToken' },
+      { path: 'proposal' },
+    ]);
+  }
+
+  /**
    * Check if user is a party in the contract
    */
   async isContractParty(contractId: string, userId: string): Promise<boolean> {

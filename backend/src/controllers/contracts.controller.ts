@@ -229,10 +229,9 @@ export const submitWork = asyncHandler(
       );
     }
 
-    const contract = await contractService.updateContractStatus(
-      id,
-      'submitted',
-    );
+    const { submittedWork } = req.body;
+
+    const contract = await contractService.submitWork(id, submittedWork);
 
     res.status(HTTP_STATUS.OK).json(
       new ApiResponse(HTTP_STATUS.OK, 'Work submitted successfully', {

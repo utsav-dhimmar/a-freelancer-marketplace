@@ -41,6 +41,16 @@
           <div class="card mt-3">
             <div class="card-body">
               <h5>Review Submitted Work</h5>
+              @if (contract()!.submittedWork) {
+                <div class="mb-3 p-3 bg-light rounded border">
+                  <label class="form-label fw-bold text-muted small text-uppercase"
+                    >Freelancer's Message</label
+                  >
+                  <p class="mb-0" style="white-space: pre-line">{{ contract()!.submittedWork }}</p>
+                </div>
+              } @else {
+                <p class="text-muted mb-3">No work description was provided by the freelancer.</p>
+              }
               <button class="btn btn-success me-2" (click)="completeContract()">
                 Mark as Complete
               </button>

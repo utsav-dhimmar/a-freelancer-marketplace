@@ -7,6 +7,7 @@ export interface IContract extends Document {
   proposal: Types.ObjectId;
   amount: number;
   status: 'active' | 'submitted' | 'completed' | 'disputed';
+  submittedWork?: string;
   startDate: Date;
   endDate?: Date;
   createdAt: Date;
@@ -47,6 +48,9 @@ const contractSchema = new Schema<IContract>(
       type: String,
       enum: ['active', 'submitted', 'completed', 'disputed'],
       default: 'active',
+    },
+    submittedWork: {
+      type: String,
     },
     startDate: {
       type: Date,
