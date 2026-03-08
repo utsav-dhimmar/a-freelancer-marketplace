@@ -2,6 +2,7 @@ import { Router } from 'express';
 import {
   getProposalsByJobId,
   getFreelancerProposals,
+  checkProposalExists,
   createProposal,
   updateProposal,
   updateProposalStatus,
@@ -25,6 +26,13 @@ router.get('/job/:jobid', authMiddleware, getProposalsByJobId);
  * @access  Private (Freelancer only)
  */
 router.get('/my-proposals', authMiddleware, getFreelancerProposals);
+
+/**
+ * @route   GET /api/proposals/check/:jobId
+ * @desc    Check if freelancer already submitted a proposal for a job
+ * @access  Private
+ */
+router.get('/check/:jobId', authMiddleware, checkProposalExists);
 
 /**
  * @route   GET /api/proposals/:id

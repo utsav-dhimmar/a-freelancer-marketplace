@@ -120,6 +120,31 @@ export const getFreelancerProposals = asyncHandler(
 );
 
 /**
+ * GET /api/proposals/check/:jobId
+ * Check if freelancer already submitted a proposal for a job
+ */
+export const checkProposalExists = asyncHandler(
+  async (req: AuthRequest, res: Response, _next: NextFunction) => {
+    if (!req.user) {
+      throw new ApiError(HTTP_STATUS.UNAUTHORIZED, 'User not authenticated');
+    }
+
+    const jobId = req.params.jobId as string;
+
+    const hasSubmitted = await proposalService.hasSubmittedProposal(
+      jobId,
+      String(req.user._id),
+    );
+
+    res.status(HTTP_STATUS.OK).json(
+      new ApiResponse(HTTP_STATUS.OK, 'Proposal check completed', {
+        hasSubmitted,
+      }),
+    );
+  },
+);
+
+/**
  * POST /api/proposals
  * Create a new proposal (Freelancer only)
  */

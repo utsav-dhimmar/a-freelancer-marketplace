@@ -37,6 +37,14 @@ export class ProposalService {
       .pipe(map((response: ApiResponse<{ proposal: Proposal }>) => response.data.proposal));
   }
 
+  checkProposalExists(jobId: string): Observable<boolean> {
+    return this.http
+      .get<
+        ApiResponse<{ hasSubmitted: boolean }>
+      >(`${API_BASE_URL}${API_ENDPOINTS.PROPOSALS.CHECK(jobId)}`)
+      .pipe(map((response: ApiResponse<{ hasSubmitted: boolean }>) => response.data.hasSubmitted));
+  }
+
   createProposal(proposal: CreateProposalRequest): Observable<Proposal> {
     return this.http
       .post<

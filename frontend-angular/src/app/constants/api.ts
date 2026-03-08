@@ -28,6 +28,7 @@ export const API_ENDPOINTS = {
     MY_PROPOSALS: '/api/proposals/my-proposals',
     ID: (id: string) => `/api/proposals/${id}`,
     STATUS: (id: string) => `/api/proposals/${id}/status`,
+    CHECK: (jobId: string) => `/api/proposals/check/${jobId}`,
   },
   CONTRACTS: {
     BASE: '/api/contracts',

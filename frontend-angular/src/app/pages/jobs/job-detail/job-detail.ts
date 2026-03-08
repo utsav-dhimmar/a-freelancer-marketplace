@@ -1,9 +1,9 @@
-import { DatePipe, TitleCasePipe, SlicePipe } from '@angular/common';
+import { DatePipe, TitleCasePipe } from '@angular/common';
 import { Component, inject, type OnInit, signal } from '@angular/core';
 import { FormBuilder, type FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { AuthService, JobService, ProposalService } from '../../../services';
-import type { User } from '../../../types/auth.types';
+
 import type { Job } from '../../../types/job.types';
 import { StatusBadgeComponent } from '../../../components/ui/status-badge/status-badge.component';
 import { EmptyStateComponent } from '../../../components/ui/empty-state/empty-state';
@@ -17,7 +17,6 @@ import { CURRENCY } from '../../../constants/currency';
     ReactiveFormsModule,
     DatePipe,
     TitleCasePipe,
-    SlicePipe,
     StatusBadgeComponent,
     EmptyStateComponent,
   ],
@@ -36,6 +35,7 @@ export class JobDetailComponent implements OnInit {
   loading = signal<boolean>(true);
   showProposalForm: boolean = false;
   submittingProposal = signal<boolean>(false);
+  hasAlreadySubmitted = signal<boolean>(false);
 
   proposalForm: FormGroup = this.fb.group({
     coverLetter: ['', [Validators.required, Validators.minLength(50)]],
@@ -52,6 +52,15 @@ export class JobDetailComponent implements OnInit {
           this.loading.set(false);
           // Set initial bid amount to job budget
           this.proposalForm.patchValue({ bidAmount: job.budget });
+
+          // Check if freelancer already submitted a proposal for this job
+          if (this.isFreelancer()) {
+            this.proposalService.checkProposalExists(job._id).subscribe({
+              next: (hasSubmitted: boolean) => {
+                this.hasAlreadySubmitted.set(hasSubmitted);
+              },
+            });
+          }
         },
         error: () => this.loading.set(false),
       });
@@ -101,6 +110,7 @@ export class JobDetailComponent implements OnInit {
         next: () => {
           this.submittingProposal.set(false);
           this.showProposalForm = false;
+          this.hasAlreadySubmitted.set(true);
           this.proposalForm.reset({
             coverLetter: '',
             bidAmount: currentJob.budget,

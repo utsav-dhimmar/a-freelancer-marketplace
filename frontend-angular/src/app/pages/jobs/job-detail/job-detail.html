@@ -79,7 +79,26 @@
           </div>
         </div>
 
-        @if (isFreelancer() && job()!.status === 'open' && !showProposalForm) {
+        @if (
+          isFreelancer() && job()!.status === 'open' && !showProposalForm && hasAlreadySubmitted()
+        ) {
+          <div class="card border-success border-opacity-25 bg-success bg-opacity-10 mb-4">
+            <div class="card-body p-4 text-center">
+              <i class="bi bi-check-circle-fill text-success fs-2 mb-2 d-block"></i>
+              <h4 class="fw-bold mb-2">Proposal Already Submitted</h4>
+              <p class="text-muted mb-0">
+                You have already submitted a proposal for this job. Check your
+                <a routerLink="/proposals/my-proposals" class="text-warning fw-bold"
+                  >My Proposals</a
+                >
+                page to track its status.
+              </p>
+            </div>
+          </div>
+        }
+        @if (
+          isFreelancer() && job()!.status === 'open' && !showProposalForm && !hasAlreadySubmitted()
+        ) {
           <div class="card border-warning border-opacity-25 bg-warning bg-opacity-10 mb-4">
             <div class="card-body p-4 text-center">
               <h4 class="fw-bold mb-3">Ready to work on this project?</h4>
